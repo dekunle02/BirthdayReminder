@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">BirthdayReminder</string>
+    <string name="email_hint">Email</string>
+    <string name="password_hint">Password</string>
+    <string name="sign_up_title">Create an account</string>
+    <string name="already_have_account">Already have an account? Sign in</string>
+    <string name="sign_in_title">Sign In</string>
+    <string name="sign_in_button">Sign IN</string>
+    <string name="register_button_text">REGISTER</string>
+    <string name="search">Search</string>
+    <string name="sign_out">Sign out</string>
 </resources>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_search"
+        android:title="@string/search"
+        app:showAsAction="ifRoom"
+        android:orderInCategory="10">
+    </item>
+
+    <item
+        android:id="@+id/action_sign_out"
+        android:title="@string/sign_out"
+        app:showAsAction="never"
+        android:orderInCategory="100">
+    </item>
+
+
+</menu>

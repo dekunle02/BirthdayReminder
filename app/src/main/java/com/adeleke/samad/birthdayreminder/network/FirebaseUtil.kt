@@ -15,8 +15,8 @@ import com.google.firebase.auth.GoogleAuthProvider
 class FirebaseUtil private constructor(context: Context) {
     private val TAG: String = FirebaseUtil::class.java.simpleName
 
-    var mAuth: FirebaseAuth
-    var mUser: FirebaseUser? = null
+    var mAuth: FirebaseAuth = FirebaseAuth.getInstance()
+    var mUser: FirebaseUser?
     var gso: GoogleSignInOptions
     var mGoogleSignInClient: GoogleSignInClient
 
@@ -32,70 +32,16 @@ class FirebaseUtil private constructor(context: Context) {
     }
 
     init {
-        mAuth = FirebaseAuth.getInstance()
         gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(OAUTH_CLIENT_ID)
             .requestEmail()
             .build()
-        mUser = mAuth.currentUser
         mGoogleSignInClient = GoogleSignIn.getClient(context, gso)
+        mUser = mAuth.currentUser
     }
 
 
-    fun signUp(email: String, password: String) {
-        mAuth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Log.d(TAG, "createUser is Successful")
-                    mUser = mAuth.currentUser
-                } else {
-                    Log.d(TAG, "createUser Failed! -> ${task.exception}")
-                }
-            }
-    }
-
-    fun signIn(email: String, password: String) {
-        mAuth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Log.d(TAG, "signIn is Successful")
-                    mUser = mAuth.currentUser
-                } else {
-                    Log.d(TAG, "signIn is Failed! -> ${task.exception}")
-                }
-            }
-    }
-
-    // This will receive the intent data from on Activity result in the activity calling googleSignIN
-    fun receiveGoogleActivity(data: Intent?) {
-        val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-        try {
-            // Google Sign In was successful, authenticate with Firebase
-            val account = task.getResult(ApiException::class.java)!!
-            Log.d(TAG, "firebaseAuthWithGoogle:" + account.id)
-            firebaseAuthWithGoogle(account.idToken!!)
-        } catch (e: ApiException) {
-            Log.d(TAG, "Google sign in failed", e)
-        }
-    }
-
-
-
-    private fun firebaseAuthWithGoogle(idToken: String) {
-        val credential = GoogleAuthProvider.getCredential(idToken, null)
-        mAuth.signInWithCredential(credential)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Log.d(TAG, "signInWithCredential:success")
-                    mUser = mAuth.currentUser
-                } else {
-                    Log.d(TAG, "signInWithCredential:failure", task.exception)
-                }
-            }
-    }
-
-     fun signOut() {
+    fun signOut() {
         // Firebase sign out
         mAuth.signOut()
 
@@ -106,7 +52,6 @@ class FirebaseUtil private constructor(context: Context) {
 
         Log.d(TAG, "Signed out")
     }
-
 
 
 }

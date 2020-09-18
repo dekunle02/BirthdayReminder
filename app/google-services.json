@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "519923531269-85jam4b2rh4g7nfm7jaopnmi0aed5usj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.adeleke.samad.birthdayreminder",
+            "certificate_hash": "e969788ac18af004a48fd4cbfefc9d8a39724527"
+          }
+        },
+        {
           "client_id": "519923531269-84796tme8imf5735chjt0u48itpknmf8.apps.googleusercontent.com",
           "client_type": 3
         }
