@@ -9,4 +9,9 @@
     <string name="register_button_text">REGISTER</string>
     <string name="search">Search</string>
     <string name="sign_out">Sign out</string>
+    <string name="birthdays">Birthdays</string>
+    <string name="settings">Settings</string>
+    <string name="share">Share</string>
+    <string name="contact_me">Contact Me</string>
+    <string name="anniversaries">Anniversaries</string>
 </resources>
