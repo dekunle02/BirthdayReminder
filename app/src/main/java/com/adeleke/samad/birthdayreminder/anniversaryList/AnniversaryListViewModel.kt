@@ -1,4 +1,4 @@
-package com.adeleke.samad.birthdayreminder.viewmodels
+package com.adeleke.samad.birthdayreminder.anniversaryList
 
 import androidx.lifecycle.ViewModel
 

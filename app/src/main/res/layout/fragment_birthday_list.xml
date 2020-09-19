@@ -4,21 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="viewmodel"
+            type="com.adeleke.samad.birthdayreminder.birthdayList.BirthdayListViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".views.main.BirthdayListFragment">
+        tools:context=".birthdayList.BirthdayListFragment">
 
-        <TextView
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/birthdayRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Hello"
-            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="match_parent"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/addNewBirthdayFab"

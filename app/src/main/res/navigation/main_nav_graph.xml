@@ -7,12 +7,30 @@
 
     <fragment
         android:id="@+id/birthdayListFragment"
-        android:name="com.adeleke.samad.birthdayreminder.views.main.BirthdayListFragment"
+        android:name="com.adeleke.samad.birthdayreminder.birthdayList.BirthdayListFragment"
         android:label="@string/birthdays"
-        tools:layout="@layout/fragment_birthday_list" />
+        tools:layout="@layout/fragment_birthday_list" >
+        <action
+            android:id="@+id/action_birthdayListFragment_to_birthdayDetail"
+            app:destination="@id/birthdayDetail"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popUpTo="@id/birthdayListFragment" />
+    </fragment>
     <fragment
         android:id="@+id/anniversaryListFragment"
-        android:name="com.adeleke.samad.birthdayreminder.views.main.AnniversaryListFragment"
+        android:name="com.adeleke.samad.birthdayreminder.anniversaryList.AnniversaryListFragment"
         android:label="@string/anniversaries"
         tools:layout="@layout/fragment_anniversary_list" />
+    <fragment
+        android:id="@+id/birthdayDetail"
+        android:name="com.adeleke.samad.birthdayreminder.birthdayDetail.BirthdayDetailFragment"
+        android:label="@string/birthday_detail"
+        tools:layout="@layout/fragment_birthday_detail" >
+        <argument
+            android:name="birthdayId"
+            app:argType="string"
+            android:defaultValue="-1" />
+    </fragment>
+
 </navigation>

@@ -14,4 +14,9 @@
     <string name="share">Share</string>
     <string name="contact_me">Contact Me</string>
     <string name="anniversaries">Anniversaries</string>
+    <string name="save">save</string>
+    <string name="name">Name</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="birthday_message_hint">Birthday message</string>
+    <string name="birthday_detail">Edit this Birthday</string>
 </resources>

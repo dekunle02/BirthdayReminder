@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/signUpFragment"
-        android:name="com.adeleke.samad.birthdayreminder.views.auth.SignUpFragment"
+        android:name="com.adeleke.samad.birthdayreminder.auth.SignUpFragment"
         android:label="fragment_sign_up"
         tools:layout="@layout/fragment_sign_up" >
         <action
@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/signInFragment"
-        android:name="com.adeleke.samad.birthdayreminder.views.auth.SignInFragment"
+        android:name="com.adeleke.samad.birthdayreminder.auth.SignInFragment"
         android:label="fragment_sign_in"
         tools:layout="@layout/fragment_sign_in" />
 </navigation>

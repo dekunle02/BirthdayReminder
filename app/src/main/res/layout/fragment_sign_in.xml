@@ -2,12 +2,12 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".views.auth.SignInFragment">
+    tools:context=".auth.SignInFragment">
 
     <data>
         <variable
             name="viewmodel"
-            type="com.adeleke.samad.birthdayreminder.viewmodels.SignInViewModel" />
+            type="com.adeleke.samad.birthdayreminder.auth.SignInViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

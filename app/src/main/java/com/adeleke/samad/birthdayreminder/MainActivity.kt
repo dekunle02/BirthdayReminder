@@ -1,8 +1,9 @@
-package com.adeleke.samad.birthdayreminder.views.main
+package com.adeleke.samad.birthdayreminder
 
 import android.content.Intent
 import android.os.Bundle
 import android.os.PersistableBundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -15,11 +16,9 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
-import com.adeleke.samad.birthdayreminder.R
 import com.adeleke.samad.birthdayreminder.databinding.ActivityMainBinding
-import com.adeleke.samad.birthdayreminder.makeSimpleSnack
 import com.adeleke.samad.birthdayreminder.network.FirebaseUtil
-import com.adeleke.samad.birthdayreminder.views.auth.AuthActivity
+import com.adeleke.samad.birthdayreminder.auth.AuthActivity
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -47,7 +46,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 GravityCompat.START
             ) else drawerLayout.closeDrawer(GravityCompat.START)
         }
-
     }
 
     override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
@@ -104,12 +102,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun setUpDrawerLayout() {
         drawerLayout = binding.drawerLayout
-        val toggle = ActionBarDrawerToggle(
-            this, drawerLayout, toolbar, 0, 0
-        )
-        drawerLayout.addDrawerListener(toggle)
-
-        toggle.syncState()
+//        val toggle = ActionBarDrawerToggle(
+//            this, drawerLayout, toolbar, 0, 0
+//        )
+//        drawerLayout.addDrawerListener(toggle)
+//
+//        toggle.syncState()
     }
 
     private fun setUpNav() {

@@ -1,4 +1,4 @@
-package com.adeleke.samad.birthdayreminder.views.auth
+package com.adeleke.samad.birthdayreminder.auth
 
 import android.os.Bundle
 import android.util.Log
@@ -14,7 +14,6 @@ import com.adeleke.samad.birthdayreminder.databinding.FragmentSignInBinding
 import com.adeleke.samad.birthdayreminder.hideSoftKeyboard
 import com.adeleke.samad.birthdayreminder.makeSimpleSnack
 import com.adeleke.samad.birthdayreminder.navigateToMain
-import com.adeleke.samad.birthdayreminder.viewmodels.SignInViewModel
 
 class SignInFragment : Fragment() {
     private val TAG = javaClass.simpleName
@@ -41,14 +40,14 @@ class SignInFragment : Fragment() {
             true
         }
 
-        viewModel.snackMessage.observe(this, Observer { message ->
+        viewModel.snackMessage.observe(viewLifecycleOwner, Observer { message ->
             binding.signInRootLayout.makeSimpleSnack(message!!)
         })
 
-        viewModel.canNavigateToMain.observe(this, Observer {
+        viewModel.canNavigateToMain.observe(viewLifecycleOwner, Observer {
             if (it == true) {
                 Log.d(TAG, "canNavigateToMain -> True")
-                activity!!.navigateToMain()
+                requireActivity().navigateToMain()
                 viewModel.doneNavigateToMain()
             }
         })

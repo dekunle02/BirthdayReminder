@@ -1,4 +1,4 @@
-package com.adeleke.samad.birthdayreminder.views.auth
+package com.adeleke.samad.birthdayreminder.auth
 
 import android.content.Intent
 import android.os.Bundle
@@ -13,9 +13,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.NavHostFragment
 import com.adeleke.samad.birthdayreminder.*
 import com.adeleke.samad.birthdayreminder.databinding.FragmentSignUpBinding
-import com.adeleke.samad.birthdayreminder.network.FirebaseUtil
 import com.adeleke.samad.birthdayreminder.network.googleSignIn
-import com.adeleke.samad.birthdayreminder.viewmodels.SignUpViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.api.ApiException
 
@@ -51,14 +49,14 @@ class SignUpFragment : Fragment() {
             googleSignIn()
         }
 
-        viewModel.snackMessage.observe(this, Observer { message ->
+        viewModel.snackMessage.observe(viewLifecycleOwner, Observer { message ->
             binding.signUpRootLayout.makeSimpleSnack(message!!)
         })
 
-        viewModel.canNavigateToMain.observe(this, Observer {
+        viewModel.canNavigateToMain.observe(viewLifecycleOwner, Observer {
             if (it == true) {
                 Log.d(TAG, "canNavigateToMain -> True")
-                activity!!.navigateToMain()
+                requireActivity().navigateToMain()
                 viewModel.doneNavigateToMain()
             }
         })
@@ -69,7 +67,7 @@ class SignUpFragment : Fragment() {
 
     private fun navigateToSignIn() {
         val navHostFragment =
-            activity!!.supportFragmentManager.findFragmentById(R.id.nav_host_auth) as NavHostFragment
+            requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_auth) as NavHostFragment
         val navController = navHostFragment.navController
         val action = SignUpFragmentDirections.actionSignUpFragmentToSignInFragment()
         navController.navigate(action)
