@@ -14,6 +14,10 @@ import androidx.navigation.fragment.NavHostFragment
 import com.adeleke.samad.birthdayreminder.*
 import com.adeleke.samad.birthdayreminder.databinding.FragmentSignUpBinding
 import com.adeleke.samad.birthdayreminder.network.googleSignIn
+import com.adeleke.samad.birthdayreminder.util.GOOGLE_RC_SIGN_IN
+import com.adeleke.samad.birthdayreminder.util.hideSoftKeyboard
+import com.adeleke.samad.birthdayreminder.util.makeSimpleSnack
+import com.adeleke.samad.birthdayreminder.util.navigateToMain
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.api.ApiException
 

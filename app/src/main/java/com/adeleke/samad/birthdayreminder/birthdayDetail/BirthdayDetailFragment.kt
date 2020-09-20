@@ -9,7 +9,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.adeleke.samad.birthdayreminder.R
 import com.adeleke.samad.birthdayreminder.databinding.FragmentBirthdayDetailBinding
-import com.adeleke.samad.birthdayreminder.makeSimpleSnack
 import com.google.android.material.datepicker.MaterialDatePicker
 
 
@@ -20,7 +19,6 @@ class BirthdayDetailFragment : Fragment() {
     private lateinit var viewModel: BirthdayDetailViewModel
     private val args: BirthdayDetailFragmentArgs by navArgs()
 
-    //args.birthdayId
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -59,7 +57,6 @@ class BirthdayDetailFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_save -> {
-                binding.birthdayDetailFrame.makeSimpleSnack("Save clicked!")
                 viewModel.addOrUpdateBirthday()
                 requireActivity().onBackPressed();
                 return true

@@ -1,8 +1,7 @@
 package com.adeleke.samad.birthdayreminder.network
 
-import android.app.Activity
 import androidx.fragment.app.Fragment
-import com.adeleke.samad.birthdayreminder.GOOGLE_RC_SIGN_IN
+import com.adeleke.samad.birthdayreminder.util.GOOGLE_RC_SIGN_IN
 
 
 fun Fragment.googleSignIn() {

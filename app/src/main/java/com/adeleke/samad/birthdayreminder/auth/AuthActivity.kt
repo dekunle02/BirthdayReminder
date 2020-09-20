@@ -3,7 +3,7 @@ package com.adeleke.samad.birthdayreminder.auth
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.adeleke.samad.birthdayreminder.R
-import com.adeleke.samad.birthdayreminder.navigateToMain
+import com.adeleke.samad.birthdayreminder.util.navigateToMain
 import com.adeleke.samad.birthdayreminder.network.FirebaseUtil
 
 class AuthActivity : AppCompatActivity() {

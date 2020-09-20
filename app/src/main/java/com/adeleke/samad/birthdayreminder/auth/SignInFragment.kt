@@ -11,9 +11,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.adeleke.samad.birthdayreminder.R
 import com.adeleke.samad.birthdayreminder.databinding.FragmentSignInBinding
-import com.adeleke.samad.birthdayreminder.hideSoftKeyboard
-import com.adeleke.samad.birthdayreminder.makeSimpleSnack
-import com.adeleke.samad.birthdayreminder.navigateToMain
+import com.adeleke.samad.birthdayreminder.util.hideSoftKeyboard
+import com.adeleke.samad.birthdayreminder.util.makeSimpleSnack
+import com.adeleke.samad.birthdayreminder.util.navigateToMain
 
 class SignInFragment : Fragment() {
     private val TAG = javaClass.simpleName

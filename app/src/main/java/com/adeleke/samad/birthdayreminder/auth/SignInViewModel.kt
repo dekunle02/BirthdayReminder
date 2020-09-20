@@ -5,8 +5,8 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.adeleke.samad.birthdayreminder.isEmailFormatted
-import com.adeleke.samad.birthdayreminder.isPasswordFormatted
+import com.adeleke.samad.birthdayreminder.util.isEmailFormatted
+import com.adeleke.samad.birthdayreminder.util.isPasswordFormatted
 import com.adeleke.samad.birthdayreminder.network.FirebaseUtil
 
 class SignInViewModel(application: Application): AndroidViewModel(application) {

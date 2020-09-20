@@ -2,8 +2,8 @@ package com.adeleke.samad.birthdayreminder.network
 
 import android.content.Context
 import android.util.Log
-import com.adeleke.samad.birthdayreminder.FIREBASE_BIRTHDAY_NODE
-import com.adeleke.samad.birthdayreminder.OAUTH_CLIENT_ID
+import com.adeleke.samad.birthdayreminder.util.FIREBASE_BIRTHDAY_NODE
+import com.adeleke.samad.birthdayreminder.util.OAUTH_CLIENT_ID
 import com.adeleke.samad.birthdayreminder.model.Birthday
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -69,7 +69,6 @@ class FirebaseUtil private constructor(context: Context) {
                     birthday = singleSnapshot.getValue(Birthday::class.java)!!
                     Log.d(TAG, "getBirthday: $birthday")
                 }
-
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -90,6 +89,7 @@ class FirebaseUtil private constructor(context: Context) {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (singleSnapshot in snapshot.children) {
                     val birthday = singleSnapshot.getValue(Birthday::class.java)!!
+                    Log.d(TAG, "onDataChange: $birthday")
                     birthdayList.add(birthday)
                 }
             }
@@ -98,6 +98,7 @@ class FirebaseUtil private constructor(context: Context) {
                 Log.d(TAG, "getBirthdayListRequest: cancelled")
             }
         })
+        Log.d(TAG, "final lust size-> ${birthdayList.size}")
         return birthdayList
     }
 

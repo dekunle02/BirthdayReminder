@@ -3,10 +3,8 @@ package com.adeleke.samad.birthdayreminder
 import android.content.Intent
 import android.os.Bundle
 import android.os.PersistableBundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
@@ -19,6 +17,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.adeleke.samad.birthdayreminder.databinding.ActivityMainBinding
 import com.adeleke.samad.birthdayreminder.network.FirebaseUtil
 import com.adeleke.samad.birthdayreminder.auth.AuthActivity
+import com.adeleke.samad.birthdayreminder.util.makeSimpleSnack
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 

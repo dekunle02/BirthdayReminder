@@ -1,4 +1,4 @@
-package com.adeleke.samad.birthdayreminder
+package com.adeleke.samad.birthdayreminder.util
 
 import android.app.Activity
 import android.content.Context
@@ -6,6 +6,8 @@ import android.content.Intent
 import android.util.Patterns
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import com.adeleke.samad.birthdayreminder.MainActivity
+import com.adeleke.samad.birthdayreminder.model.Birthday
 import com.google.android.material.snackbar.Snackbar
 
 // String extension functions that help check proper EditText user inputs
@@ -53,4 +55,8 @@ fun convertToEasyDate(date: String): Map<String, String> {
         "month" to arr[0],
         "year" to arr[2]
         )
+}
+
+fun Birthday.getSimpleDate(): String {
+    return this.monthOfBirth + " " + this.dayOfBirth + ", " + this.yearOfBirth
 }

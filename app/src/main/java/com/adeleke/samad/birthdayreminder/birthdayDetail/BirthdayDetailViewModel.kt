@@ -3,9 +3,10 @@ package com.adeleke.samad.birthdayreminder.birthdayDetail
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
-import com.adeleke.samad.birthdayreminder.convertToEasyDate
+import com.adeleke.samad.birthdayreminder.util.convertToEasyDate
 import com.adeleke.samad.birthdayreminder.model.Birthday
 import com.adeleke.samad.birthdayreminder.network.FirebaseUtil
+import com.adeleke.samad.birthdayreminder.util.getSimpleDate
 
 class BirthdayDetailViewModel(var oldBirthdayId: String, application: Application) : AndroidViewModel(application) {
     private val TAG = javaClass.simpleName
@@ -75,8 +76,7 @@ class BirthdayDetailViewModel(var oldBirthdayId: String, application: Applicatio
         } else {
             oldBirthday = FirebaseUtil.getInstance(context).getBirthdayWithId(oldBirthdayId)!!
             name.value = oldBirthday.name
-            dateOfBirth.value =
-                oldBirthday.monthOfBirth + " " + oldBirthday.dayOfBirth + ", " + oldBirthday.yearOfBirth
+            dateOfBirth.value = oldBirthday.getSimpleDate()
             phoneNumber.value = oldBirthday.phoneNumber
             message.value = oldBirthday.textMessage
         }
