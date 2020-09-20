@@ -5,6 +5,7 @@ import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.adeleke.samad.birthdayreminder.R
@@ -42,6 +43,19 @@ class BirthdayDetailFragment : Fragment() {
         viewModel = ViewModelProvider(this, viewModelFactory).get(BirthdayDetailViewModel::class.java)
         binding.viewmodel = viewModel
 
+        // observables
+        viewModel.fieldName.observe(viewLifecycleOwner, Observer {
+            binding.nameEdit.setText(it)
+        })
+        viewModel.fieldDate.observe(viewLifecycleOwner, Observer {
+            binding.yearEdit.setText(it)
+        })
+        viewModel.fieldPhoneNumber.observe(viewLifecycleOwner, Observer {
+            binding.phoneEdit.setText(it)
+        })
+        viewModel.fieldMessage.observe(viewLifecycleOwner, Observer {
+            binding.messageEdit.setText(it)
+        })
 
         return binding.root
     }

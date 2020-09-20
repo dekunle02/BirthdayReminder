@@ -11,6 +11,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
+import kotlin.math.log
 
 class FirebaseUtil private constructor(context: Context) {
     private val TAG: String = FirebaseUtil::class.java.simpleName
@@ -22,7 +23,7 @@ class FirebaseUtil private constructor(context: Context) {
         .requestEmail()
         .build()
     var mGoogleSignInClient: GoogleSignInClient
-    private var birthdayReference: DatabaseReference
+    var birthdayReference: DatabaseReference
 
 
     companion object {
@@ -36,6 +37,7 @@ class FirebaseUtil private constructor(context: Context) {
     }
 
     init {
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true)
         mGoogleSignInClient = GoogleSignIn.getClient(context, gso)
         mUser = mAuth.currentUser
         val database = FirebaseDatabase.getInstance()
@@ -47,7 +49,7 @@ class FirebaseUtil private constructor(context: Context) {
 
 
     fun addBirthday(birthday: Birthday) {
-        birthdayReference.child(mUser!!.uid).child(birthday.id).setValue(birthday).addOnCompleteListener {
+        birthdayReference.child(mAuth.currentUser!!.uid).child(birthday.id).setValue(birthday).addOnCompleteListener {
             if (it.isSuccessful) {
                 Log.d(TAG, "Birthday inserted successfully!")
             } else if (it.isCanceled) {
@@ -56,51 +58,6 @@ class FirebaseUtil private constructor(context: Context) {
         }
     }
 
-
-    fun getBirthdayWithId(id: String): Birthday? {
-        Log.d(TAG, "getBirthdayWithId: called")
-        var birthday: Birthday? = null
-        val query = birthdayReference.child(mUser!!.uid).orderByKey()
-            .equalTo(id)
-
-        query.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                for (singleSnapshot in snapshot.children) {
-                    birthday = singleSnapshot.getValue(Birthday::class.java)!!
-                    Log.d(TAG, "getBirthday: $birthday")
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                Log.d(TAG, "getBirthdayRequest: cancelled")
-            }
-
-        })
-
-        return birthday
-    }
-
-    fun getAllBirthdays(): MutableList<Birthday> {
-        Log.d(TAG, "getAllBirthdays: called")
-        val birthdayList = mutableListOf<Birthday>()
-        val query = birthdayReference.child(mUser!!.uid).orderByKey()
-
-        query.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                for (singleSnapshot in snapshot.children) {
-                    val birthday = singleSnapshot.getValue(Birthday::class.java)!!
-                    Log.d(TAG, "onDataChange: $birthday")
-                    birthdayList.add(birthday)
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                Log.d(TAG, "getBirthdayListRequest: cancelled")
-            }
-        })
-        Log.d(TAG, "final lust size-> ${birthdayList.size}")
-        return birthdayList
-    }
 
 
     fun signOut() {
