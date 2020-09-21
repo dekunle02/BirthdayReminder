@@ -14,9 +14,9 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
+import com.adeleke.samad.birthdayreminder.auth.AuthActivity
 import com.adeleke.samad.birthdayreminder.databinding.ActivityMainBinding
 import com.adeleke.samad.birthdayreminder.network.FirebaseUtil
-import com.adeleke.samad.birthdayreminder.auth.AuthActivity
 import com.adeleke.samad.birthdayreminder.util.makeSimpleSnack
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
@@ -74,7 +74,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_search -> coordinatorHost.makeSimpleSnack("Search clicked!")
+
             R.id.action_sign_out -> {
                 coordinatorHost.makeSimpleSnack("Log out clicked!")
                 FirebaseUtil.getInstance(this).signOut()

@@ -6,9 +6,9 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.adeleke.samad.birthdayreminder.model.Birthday
 import com.adeleke.samad.birthdayreminder.network.FirebaseUtil
+import com.adeleke.samad.birthdayreminder.util.monthSortMap
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -36,10 +36,11 @@ class BirthdayListViewModel(application: Application) : AndroidViewModel(applica
         Log.d(TAG, "BirthdayList View model init: called")
     }
 
-    fun populateRecyclerData () {
+    fun populateRecyclerData() {
         Log.d(TAG, "populateRecyclerData: called")
 
-        val query = firebaseUtil.birthdayReference.child(firebaseUtil.mAuth.currentUser!!.uid).orderByKey()
+        val query =
+            firebaseUtil.birthdayReference.child(firebaseUtil.mAuth.currentUser!!.uid).orderByKey()
 
         query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -54,6 +55,7 @@ class BirthdayListViewModel(application: Application) : AndroidViewModel(applica
                     }
                     Log.d(TAG, "onDataChange: $myList")
                     _recyclerData.value = myList
+                    filterByMonth()
                 }
 
             }
@@ -69,6 +71,18 @@ class BirthdayListViewModel(application: Application) : AndroidViewModel(applica
         _navigateToId.value = _recyclerData.value?.get(position)!!.id
     }
 
+    fun filterByMonth() {
+        Log.d(TAG, "filterByMonth: called")
+        val sortedList =
+            _recyclerData.value!!.sortedWith(compareBy { monthSortMap[it.monthOfBirth] })
+        _recyclerData.value = sortedList.toMutableList()
+    }
+
+    fun filterByAlphabetically() {
+        Log.d(TAG, "filterByAlphabetically: called")
+        val sortedList = _recyclerData.value!!.sortedWith(compareBy { it.name })
+        _recyclerData.value = sortedList.toMutableList()
+    }
 
 
 }

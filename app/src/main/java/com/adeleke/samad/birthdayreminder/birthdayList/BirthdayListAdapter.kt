@@ -48,7 +48,7 @@ class BirthdayListAdapter(activity: FragmentActivity) :
             }
         }
 
-        fun navigateToDetail(birthdayId: String) {
+        private fun navigateToDetail(birthdayId: String) {
             val navHostFragment =
                 myActivity.supportFragmentManager.findFragmentById(R.id.nav_host_main) as NavHostFragment
             val navController = navHostFragment.navController

@@ -3,8 +3,10 @@ package com.adeleke.samad.birthdayreminder.birthdayList
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.PopupMenu
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -27,13 +29,14 @@ class BirthdayListFragment : Fragment() {
         binding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_birthday_list, container, false)
         binding.viewmodel = viewModel
+        setHasOptionsMenu(true)
 
         binding.birthdayRecyclerView.layoutManager = LinearLayoutManager(context)
         val adapter = BirthdayListAdapter(requireActivity())
         binding.birthdayRecyclerView.adapter = adapter
         viewModel.recyclerData.observe(viewLifecycleOwner, Observer {
             if (it != null) {
-                Log.d(TAG, "size of List: ${it.size}")
+                Log.d(TAG, "dataSet has changed!")
                 adapter.data = it
             }
         })
@@ -61,11 +64,27 @@ class BirthdayListFragment : Fragment() {
         navController.navigate(action)
     }
 
-    inner class CustomClickListener(private val position: Int) : View.OnClickListener {
-        override fun onClick(p0: View?) {
-            viewModel.navigateWithPosition(position)
-        }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.action_filter) {showFilteringPopUpMenu()}
+        return super.onOptionsItemSelected(item)
+
     }
 
+    private fun showFilteringPopUpMenu() {
+        val view = activity?.findViewById<View>(R.id.action_filter) ?: return
+        PopupMenu(requireContext(), view).run {
+            menuInflater.inflate(R.menu.filter_lists, menu)
+
+            setOnMenuItemClickListener {
+                when (it.itemId) {
+                    R.id.filter_alphabetically -> viewModel.filterByAlphabetically()
+                    R.id.filter_month -> viewModel.filterByMonth()
+                }
+                true
+            }
+            show()
+        }
+    }
 
 }

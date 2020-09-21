@@ -12,6 +12,7 @@ import com.adeleke.samad.birthdayreminder.util.getSimpleDate
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
+import java.util.*
 
 class BirthdayDetailViewModel(var oldBirthdayId: String, application: Application) : AndroidViewModel(application) {
     private val TAG = javaClass.simpleName
@@ -81,7 +82,7 @@ class BirthdayDetailViewModel(var oldBirthdayId: String, application: Applicatio
 
         val birthday = Birthday(
             id = oldBirthdayId,
-            name = name.value!!,
+            name = name.value!!.capitalize(),
             dayOfBirth = dateMap.get("day")!!,
             monthOfBirth = dateMap.get("month")!!,
             yearOfBirth = dateMap.get("year")!!,

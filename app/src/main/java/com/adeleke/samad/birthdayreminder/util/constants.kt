@@ -15,6 +15,7 @@ val colorMap = mapOf(
     "Jan" to R.color.salmon,
     "Feb" to R.color.pink,
     "Mar" to R.color.lilac,
+    "Apr" to R.color.colorAccent,
     "May" to R.color.purple,
     "Jun" to R.color.blue,
     "Jul" to R.color.bluegreen,
@@ -25,3 +26,17 @@ val colorMap = mapOf(
     "Dec" to R.color.tangerine,
     "default" to R.color.colorAccent
     )
+
+val monthSortMap = mapOf("Jan" to 1,
+    "Feb" to 2,
+    "Mar" to 3,
+    "Apr" to 4,
+    "May" to 5,
+    "Jun" to 6,
+    "Jul" to 7,
+    "Aug" to 8,
+    "Sep" to 9,
+    "Oct" to 10,
+    "Nov" to 11,
+    "Dec" to 12
+)
