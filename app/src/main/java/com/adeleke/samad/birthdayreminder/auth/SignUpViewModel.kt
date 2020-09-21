@@ -13,6 +13,8 @@ import com.google.firebase.auth.GoogleAuthProvider
 class SignUpViewModel(application: Application) : AndroidViewModel(application) {
     private val TAG = javaClass.simpleName
     private val context = application.applicationContext
+    private val firebaseUtil: FirebaseUtil = FirebaseUtil.getInstance(context)
+
 
     // Two way bindings
     val email = MutableLiveData<String>()
@@ -27,40 +29,41 @@ class SignUpViewModel(application: Application) : AndroidViewModel(application) 
     val canNavigateToMain: LiveData<Boolean?>
         get() = _canNavigateToMain
 
-    private val firebaseUtil: FirebaseUtil = FirebaseUtil.getInstance(context)
+    private val _showProgressBar = MutableLiveData<Boolean>()
+    val showProgressBar: LiveData<Boolean?>
+        get() = _showProgressBar
+
 
     fun register() {
-        Log.d(TAG, "register() called with email-> ${email.value}, password-> ${password.value}")
-        if (!(email.value!!.isEmailFormatted() && password.value!!.isPasswordFormatted())) {
-            Log.d(TAG, "IncorrectFormat")
-            _snackMessage.value = "Incorrect Format"
-            return
-        }
+        _showProgressBar.value = true
         firebaseUtil.mAuth.createUserWithEmailAndPassword(email.value!!, password.value!!)
             .addOnCompleteListener { task ->
+                _showProgressBar.value = false
                 if (task.isSuccessful) {
-                    Log.d(TAG, "signIn is Successful")
                     _canNavigateToMain.value = true
                 } else {
+                    _snackMessage.value = "Sign in Failed. ${task.exception.toString()}"
                     Log.d(TAG, "signIn is Failed! -> ${task.exception}")
                 }
             }
     }
 
     fun firebaseAuthWithGoogle(idToken: String) {
+        _showProgressBar.value = true
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         firebaseUtil.mAuth.signInWithCredential(credential)
             .addOnCompleteListener { task ->
+                _showProgressBar.value = false
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "signInWithCredential:success")
                     _canNavigateToMain.value = true
                 } else {
+                    _snackMessage.value = "Sign in Failed. ${task.exception.toString()}"
                     Log.d(TAG, "signInWithCredential:failure", task.exception)
                 }
             }
     }
-
 
     fun doneNavigateToMain() {
         _canNavigateToMain.value = false

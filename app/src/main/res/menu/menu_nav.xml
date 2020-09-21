@@ -4,14 +4,12 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/birthdayListFragment"
-            android:title="@string/birthdays"
-            android:icon="@drawable/ic_birthday">
-        </item>
+            android:icon="@drawable/ic_birthday"
+            android:title="@string/birthdays"/>
         <item
             android:id="@+id/anniversaryListFragment"
-            android:title="@string/anniversaries"
-            android:icon="@drawable/ic_gift">
-        </item>
+            android:icon="@drawable/ic_gift"
+            android:title="@string/anniversaries"/>
     </group>
 
     <group android:id="@+id/others">
@@ -28,4 +26,5 @@
             android:icon="@drawable/ic_email"
             android:title="@string/contact_me" />
     </group>
+
 </menu>

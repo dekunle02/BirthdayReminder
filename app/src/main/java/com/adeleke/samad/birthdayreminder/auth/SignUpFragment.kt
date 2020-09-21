@@ -11,15 +11,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.NavHostFragment
-import com.adeleke.samad.birthdayreminder.*
+import com.adeleke.samad.birthdayreminder.R
 import com.adeleke.samad.birthdayreminder.databinding.FragmentSignUpBinding
 import com.adeleke.samad.birthdayreminder.network.googleSignIn
-import com.adeleke.samad.birthdayreminder.util.GOOGLE_RC_SIGN_IN
-import com.adeleke.samad.birthdayreminder.util.hideSoftKeyboard
-import com.adeleke.samad.birthdayreminder.util.makeSimpleSnack
-import com.adeleke.samad.birthdayreminder.util.navigateToMain
+import com.adeleke.samad.birthdayreminder.util.*
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
+import com.google.android.material.textfield.TextInputLayout
+
 
 class SignUpFragment : Fragment() {
     private val TAG = javaClass.simpleName
@@ -34,27 +34,57 @@ class SignUpFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_sign_up, container, false)
         binding.viewmodel = viewModel
 
-        binding.haveAccountButton.setOnClickListener {
+
+        binding.haveAnAccountButton.setOnClickListener {
             navigateToSignIn()
         }
 
-        binding.signUpEmailEditText.setOnEditorActionListener { p0, p1, p2 ->
+        // Edit Text settings
+        binding.signUpEmailTI.setOnEditorActionListener { textView, i, keyEvent ->
             binding.signUpPasswordEditText.requestFocus()
             true
         }
-
-        binding.signUpPasswordEditText.setOnEditorActionListener { textView, i, keyEvent ->
+        binding.signUpPasswordTI.setOnEditorActionListener { textView, i, keyEvent ->
             hideSoftKeyboard(textView)
-            viewModel.register()
             true
         }
 
-        binding.signInWithGoogleButton.setOnClickListener { it ->
+        binding.signUpEmailTI.setOnKeyListener { _, _, _ ->
+            if (binding.signUpEmailTI.text.toString().isEmailFormatted()) {
+                (binding.signUpEmailEditText).error = null
+            }
+            false
+        }
+
+        binding.signUpPasswordTI.setOnKeyListener { _, _, _ ->
+            if (binding.signUpPasswordTI.text.toString().isPasswordFormatted()) {
+                (binding.signUpPasswordEditText).error = null
+            }
+            false
+        }
+
+
+        // Button CLick Listeners
+        binding.signUpWithGoogleButton.setSize(SignInButton.SIZE_WIDE)
+        binding.signUpWithGoogleButton.setOnClickListener { it ->
+            binding.signUpProgressBar.visibility = View.VISIBLE
             googleSignIn()
         }
 
+        binding.signUpButton.setOnClickListener {
+            if (inputFieldsAreCorrect()) {
+                binding.signUpProgressBar.visibility = View.VISIBLE
+                viewModel.register()
+            }
+        }
+
+        // Observables
+        viewModel.showProgressBar.observe(viewLifecycleOwner, Observer { canShow ->
+            binding.signUpProgressBar.visibility = if (canShow!!) View.VISIBLE else View.GONE
+        })
+
         viewModel.snackMessage.observe(viewLifecycleOwner, Observer { message ->
-            binding.signUpRootLayout.makeSimpleSnack(message!!)
+            binding.mainFrameSignUp.makeSimpleSnack(message!!)
         })
 
         viewModel.canNavigateToMain.observe(viewLifecycleOwner, Observer {
@@ -64,6 +94,7 @@ class SignUpFragment : Fragment() {
                 viewModel.doneNavigateToMain()
             }
         })
+        //
 
         return binding.root
     }
@@ -77,6 +108,7 @@ class SignUpFragment : Fragment() {
         navController.navigate(action)
     }
 
+    // Handle Google Sign In
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
@@ -93,5 +125,20 @@ class SignUpFragment : Fragment() {
         }
     }
 
+    // Verify input Fields
+    private fun inputFieldsAreCorrect(): Boolean {
+        val enteredEmail = binding.signUpEmailTI.text.toString()
+        val enteredPassword = binding.signUpPasswordTI.text.toString()
+
+        return if (!enteredEmail.isEmailFormatted()) {
+            binding.signUpEmailEditText.error = getString(R.string.enter_valid_email)
+            false
+        } else if (!enteredPassword.isPasswordFormatted()) {
+            binding.signUpPasswordEditText.error = getString(R.string.enter_valid_password)
+            false
+        } else {
+            true
+        }
+    }
 
 }

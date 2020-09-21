@@ -3,10 +3,10 @@
     <string name="email_hint">Email</string>
     <string name="password_hint">Password</string>
     <string name="sign_up_title">Create an account</string>
-    <string name="already_have_account">Already have an account? Sign in</string>
-    <string name="sign_in_title">Sign In</string>
-    <string name="sign_in_button">Sign IN</string>
-    <string name="register_button_text">REGISTER</string>
+    <string name="sign_in_title">Welcome back!</string>
+    <string name="already_have_account">Already have an account? SIGN IN</string>
+    <string name="sign_in_button">Sign in</string>
+    <string name="sign_up_button">Register</string>
     <string name="search">Search</string>
     <string name="sign_out">Sign out</string>
     <string name="birthdays">Birthdays</string>
@@ -21,6 +21,8 @@
     <string name="birthday_detail">Edit this Birthday</string>
     <string name="search_hint">search</string>
     <string name="menu_filter">Filter</string>
-    <string name="alphabetically">alphabetically</string>
-    <string name="by_month">by month</string>
+    <string name="alphabetically">sort alphabetically</string>
+    <string name="by_month">sort by month</string>
+    <string name="enter_valid_email">Please enter a valid email!</string>
+    <string name="enter_valid_password">Password should be at least 6 characters.</string>
 </resources>

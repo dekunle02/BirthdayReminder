@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="nav_margin">4dp</dimen>
-    <dimen name="nav_header_height">170dp</dimen>
+    <dimen name="nav_header_height">190dp</dimen>
     <dimen name="nav_header_vertical_spacing">4dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="text_input_margin_horizontal">48dp</dimen>
+    <dimen name="register_button_margin_horizontal">88dp</dimen>
 </resources>

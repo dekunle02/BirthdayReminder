@@ -13,12 +13,12 @@ import com.google.android.material.snackbar.Snackbar
 // String extension functions that help check proper EditText user inputs
 fun String.isEmailFormatted(): Boolean {
     val text = this.trim()
-    return !(text.isNullOrEmpty() || !Patterns.EMAIL_ADDRESS.matcher(text).matches())
+    return (!text.isNullOrEmpty() && Patterns.EMAIL_ADDRESS.matcher(text).matches())
 }
 
 fun String.isPasswordFormatted(): Boolean {
     val text = this.trim()
-    return !(text.isNullOrEmpty() || text.length < 6)
+    return (!text.isNullOrEmpty() && text.length >= 6)
 }
 
 fun String.isEmpty(): Boolean {
