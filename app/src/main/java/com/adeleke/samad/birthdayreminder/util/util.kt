@@ -35,7 +35,7 @@ fun hideSoftKeyboard(view: View) {
 
 // Function to show a simple snackbar message, used all over the app to communicate with user
 fun View.makeSimpleSnack(message: String) {
-    Snackbar.make(this, message, Snackbar.LENGTH_SHORT).show()
+    Snackbar.make(this, message, Snackbar.LENGTH_LONG).show()
 }
 
 

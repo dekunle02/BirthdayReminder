@@ -10,6 +10,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintBirthdayList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".birthdayList.BirthdayListFragment">
@@ -28,9 +29,9 @@
             android:id="@+id/addNewBirthdayFab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/fab_margin"
             android:src="@drawable/ic_add"
+            style="@style/Widget.App.FabStyle"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>

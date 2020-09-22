@@ -5,6 +5,8 @@ import android.util.Log
 import com.adeleke.samad.birthdayreminder.util.FIREBASE_BIRTHDAY_NODE
 import com.adeleke.samad.birthdayreminder.util.OAUTH_CLIENT_ID
 import com.adeleke.samad.birthdayreminder.model.Birthday
+import com.adeleke.samad.birthdayreminder.util.FIREBASE_ANNIVERSARY_NODE
+import com.adeleke.samad.birthdayreminder.util.FIREBASE_ARCHIVE_NODE
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -24,6 +26,7 @@ class FirebaseUtil private constructor(context: Context) {
         .build()
     var mGoogleSignInClient: GoogleSignInClient
     var birthdayReference: DatabaseReference
+    var archiveReference: DatabaseReference
 
 
     companion object {
@@ -38,17 +41,22 @@ class FirebaseUtil private constructor(context: Context) {
 
     init {
         FirebaseDatabase.getInstance().setPersistenceEnabled(true)
+        if(mAuth == null) {
+            Log.d(TAG, "mAuth: is null")
+        }
         mGoogleSignInClient = GoogleSignIn.getClient(context, gso)
         mUser = mAuth.currentUser
+
         val database = FirebaseDatabase.getInstance()
         if (mUser == null) {
             Log.d(TAG, "Unable to get data reference because mUSer is null!")
         }
         birthdayReference = database.getReference(FIREBASE_BIRTHDAY_NODE)
+        archiveReference = database.getReference(FIREBASE_ARCHIVE_NODE)
     }
 
 
-    fun addBirthday(birthday: Birthday) {
+    fun addBirthdayToBirthdays(birthday: Birthday) {
         birthdayReference.child(mAuth.currentUser!!.uid).child(birthday.id).setValue(birthday).addOnCompleteListener {
             if (it.isSuccessful) {
                 Log.d(TAG, "Birthday inserted successfully!")
@@ -58,6 +66,45 @@ class FirebaseUtil private constructor(context: Context) {
         }
     }
 
+    private fun deleteBirthdayFromBirthdays(birthdayId: String) {
+        birthdayReference.child(mAuth.currentUser!!.uid).child(birthdayId).removeValue().addOnCompleteListener{
+            if (it.isSuccessful) {
+                Log.d(TAG, "Birthday deleted successfully!")
+            } else if (it.isCanceled) {
+                Log.d(TAG, "Birthday deletion failed cancelled!")
+            }
+        }
+    }
+
+
+    private fun addBirthdayToArchive(birthday: Birthday) {
+        archiveReference.child(mAuth.currentUser!!.uid).child(birthday.id).setValue(birthday).addOnCompleteListener {
+            if (it.isSuccessful) {
+                Log.d(TAG, "Birthday inserted successfully!")
+            } else if (it.isCanceled) {
+                Log.d(TAG, "Birthday insertion cancelled!")
+            }
+        }
+    }
+
+    private fun deleteBirthdayFromArchive(birthdayId: String) {
+        archiveReference.child(mAuth.currentUser!!.uid).child(birthdayId).removeValue().addOnCompleteListener{
+            if (it.isSuccessful) {
+                Log.d(TAG, "Birthday deleted successfully!")
+            } else if (it.isCanceled) {
+                Log.d(TAG, "Birthday deletion failed cancelled!")
+            }
+        }
+    }
+
+    fun archiveBirthday(birthday: Birthday) {
+        deleteBirthdayFromBirthdays(birthday.id)
+        addBirthdayToArchive(birthday)
+    }
+    fun restoreBirthdayFromArchive(birthday: Birthday) {
+        deleteBirthdayFromArchive(birthday.id)
+        addBirthdayToBirthdays(birthday)
+    }
 
 
     fun signOut() {

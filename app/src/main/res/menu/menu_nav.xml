@@ -10,6 +10,11 @@
             android:id="@+id/anniversaryListFragment"
             android:icon="@drawable/ic_gift"
             android:title="@string/anniversaries"/>
+
+        <item
+            android:id="@+id/archiveListFragment"
+            android:icon="@drawable/ic_archive"
+            android:title="@string/archive"/>
     </group>
 
     <group android:id="@+id/others">

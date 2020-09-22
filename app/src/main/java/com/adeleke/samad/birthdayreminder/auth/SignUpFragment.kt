@@ -41,7 +41,7 @@ class SignUpFragment : Fragment() {
 
         // Edit Text settings
         binding.signUpEmailTI.setOnEditorActionListener { textView, i, keyEvent ->
-            binding.signUpPasswordEditText.requestFocus()
+            binding.signUpPasswordTI.requestFocus()
             true
         }
         binding.signUpPasswordTI.setOnEditorActionListener { textView, i, keyEvent ->
@@ -62,7 +62,6 @@ class SignUpFragment : Fragment() {
             }
             false
         }
-
 
         // Button CLick Listeners
         binding.signUpWithGoogleButton.setSize(SignInButton.SIZE_WIDE)

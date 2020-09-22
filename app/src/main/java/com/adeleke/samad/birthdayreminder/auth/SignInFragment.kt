@@ -36,7 +36,7 @@ class SignInFragment : Fragment() {
 
         // Edit Text settings
         binding.signInEmailTI.setOnEditorActionListener { p0, p1, p2 ->
-            binding.signInPasswordEditText.requestFocus()
+            binding.signInPasswordTI.requestFocus()
             true
         }
         binding.signInPasswordTI.setOnEditorActionListener { textView, i, keyEvent ->

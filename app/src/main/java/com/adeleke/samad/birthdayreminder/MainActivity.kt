@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.PersistableBundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
@@ -97,22 +98,23 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun setUpToolbar() {
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
+//        val ab = supportActionBar!!
+//        ab.setDisplayHomeAsUpEnabled(false)
     }
 
     private fun setUpDrawerLayout() {
         drawerLayout = binding.drawerLayout
-//        val toggle = ActionBarDrawerToggle(
-//            this, drawerLayout, toolbar, 0, 0
-//        )
-//        drawerLayout.addDrawerListener(toggle)
-//
-//        toggle.syncState()
+        val toggle = ActionBarDrawerToggle(
+            this, drawerLayout, toolbar, 0, 0
+        )
+        drawerLayout.addDrawerListener(toggle)
+
+        toggle.syncState()
     }
 
     private fun setUpNav() {
         navView = binding.navView
         navView.setNavigationItemSelectedListener(this)
-
         navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_main) as NavHostFragment
         navController = navHostFragment.navController

@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.adeleke.samad.birthdayreminder.R
 import com.adeleke.samad.birthdayreminder.util.isEmailFormatted
 import com.adeleke.samad.birthdayreminder.util.isPasswordFormatted
 import com.adeleke.samad.birthdayreminder.network.FirebaseUtil
@@ -36,16 +37,19 @@ class SignInViewModel(application: Application): AndroidViewModel(application) {
 
     fun signIn() {
         _showProgressBar.value = true
+        Log.d(TAG, "signIn: called")
         firebaseUtil.mAuth.signInWithEmailAndPassword(email.value!!, password.value!!)
             .addOnCompleteListener { task ->
+                Log.d(TAG, "signInFirebase: called ")
                 _showProgressBar.value = false
                 if (task.isSuccessful) {
                     _canNavigateToMain.value = true
                 } else {
-                    Log.d(TAG, "signIn is Failed! -> ${task.exception}")
-                    _snackMessage.value = "Sign in Failed. ${task.exception.toString()}"
+                    _snackMessage.value = context.getString(R.string.error) + task.exception!!.message
+                    Log.d(TAG, "signIn Failed! -> ${task.exception}")
                 }
             }
+
     }
 
     fun firebaseAuthWithGoogle(idToken: String) {

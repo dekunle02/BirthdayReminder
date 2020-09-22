@@ -8,8 +8,8 @@ data class Birthday (
     val dayOfBirth: String = "1",
     val monthOfBirth: String = "1",
     val yearOfBirth: String = "2000",
-    val phoneNumber: String = "Phone number",
-    val textMessage: String = " Happy Birthday!!!"
+    val phoneNumber: String = "",
+    val textMessage: String = "Happy Birthday!!!"
 ) {
     companion object{
         private const val prefix = "birthday- "

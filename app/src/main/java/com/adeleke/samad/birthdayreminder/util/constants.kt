@@ -10,6 +10,8 @@ const val GOOGLE_RC_SIGN_IN = 1
 
 const val FIREBASE_BIRTHDAY_NODE = "Birthdays"
 const val FIREBASE_ANNIVERSARY_NODE = "Anniversaries"
+const val FIREBASE_ARCHIVE_NODE = "Archived"
+
 
 val colorMap = mapOf(
     "Jan" to R.color.salmon,
@@ -25,9 +27,9 @@ val colorMap = mapOf(
     "Nov" to R.color.gold,
     "Dec" to R.color.tangerine,
     "default" to R.color.colorAccent
-    )
-
-val monthSortMap = mapOf("Jan" to 1,
+)
+val monthSortMap = mapOf(
+    "Jan" to 1,
     "Feb" to 2,
     "Mar" to 3,
     "Apr" to 4,
@@ -40,3 +42,7 @@ val monthSortMap = mapOf("Jan" to 1,
     "Nov" to 11,
     "Dec" to 12
 )
+
+const val NEW_BIRTHDAY_ID = "-1"
+const val ITEM_DETAIL_TAG = "detailTag"
+const val CONTACT_REQUEST_CODE = 100

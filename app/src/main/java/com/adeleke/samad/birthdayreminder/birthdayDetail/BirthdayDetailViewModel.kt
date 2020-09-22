@@ -1,20 +1,22 @@
 package com.adeleke.samad.birthdayreminder.birthdayDetail
 
 import android.app.Application
+import android.database.Cursor
+import android.net.Uri
+import android.provider.ContactsContract
 import android.util.Log
-import androidx.databinding.BaseObservable
-import androidx.databinding.Bindable
 import androidx.lifecycle.*
-import com.adeleke.samad.birthdayreminder.util.convertToEasyDate
 import com.adeleke.samad.birthdayreminder.model.Birthday
 import com.adeleke.samad.birthdayreminder.network.FirebaseUtil
+import com.adeleke.samad.birthdayreminder.util.NEW_BIRTHDAY_ID
+import com.adeleke.samad.birthdayreminder.util.convertToEasyDate
 import com.adeleke.samad.birthdayreminder.util.getSimpleDate
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
-import java.util.*
 
-class BirthdayDetailViewModel(var oldBirthdayId: String, application: Application) : AndroidViewModel(application) {
+class BirthdayDetailViewModel(var oldBirthdayId: String, application: Application) :
+    AndroidViewModel(application) {
     private val TAG = javaClass.simpleName
     private val context = application.applicationContext
 
@@ -33,13 +35,13 @@ class BirthdayDetailViewModel(var oldBirthdayId: String, application: Applicatio
     val fieldName: LiveData<String>
         get() = _fieldName
 
-      private val _fieldDate = MutableLiveData<String>()
+    private val _fieldDate = MutableLiveData<String>()
     val fieldDate: LiveData<String>
         get() = _fieldDate
-      private val _fieldPhoneNumber = MutableLiveData<String>()
+    private val _fieldPhoneNumber = MutableLiveData<String>()
     val fieldPhoneNumber: LiveData<String>
         get() = _fieldPhoneNumber
-      private val _fieldMessage = MutableLiveData<String>()
+    private val _fieldMessage = MutableLiveData<String>()
     val fieldMessage: LiveData<String>
         get() = _fieldMessage
 
@@ -54,49 +56,36 @@ class BirthdayDetailViewModel(var oldBirthdayId: String, application: Applicatio
         initBirthdayWithId()
     }
 
+    // Function called when save is clicked from toolbar
     fun addOrUpdateBirthday() {
-        val newBirthday = makeBirthdayObject()
-        FirebaseUtil.getInstance(context).addBirthday(newBirthday!!)
+        val newBirthday = makeBirthdayObjectFromField()
+        FirebaseUtil.getInstance(context).addBirthdayToBirthdays(newBirthday!!)
     }
 
 
-    private fun makeBirthdayObject(): Birthday? {
-        if (name.value!!.isEmpty()) {
-            _snackMessage.value = "Name cannot be left blank!"
-            return null
-        }
-        if (dateOfBirth.value!!.isEmpty()) {
-            _snackMessage.value = "Date of birth cannot be blank"
-            return null
-        }
-        if (phoneNumber.value!!.isEmpty()) {
-            _snackMessage.value = "Leave a phone number"
-            return null
-        }
-        if (message.value!!.isEmpty()) {
-            _snackMessage.value = "Leave a text message!"
-            return null
-        }
+    private fun makeBirthdayObjectFromField(): Birthday? {
         val rawDate = dateOfBirth.value!!
         val dateMap = convertToEasyDate(rawDate)
 
         val birthday = Birthday(
             id = oldBirthdayId,
             name = name.value!!.capitalize(),
-            dayOfBirth = dateMap.get("day")!!,
-            monthOfBirth = dateMap.get("month")!!,
-            yearOfBirth = dateMap.get("year")!!,
+            dayOfBirth = dateMap["day"]!!,
+            monthOfBirth = dateMap["month"]!!,
+            yearOfBirth = dateMap["year"]!!,
             phoneNumber = phoneNumber.value!!,
             textMessage = message.value!!
         )
-        Log.d(TAG, "birthday object -> $birthday")
+        Log.d(TAG, "birthday object made -> $birthday")
         return birthday
     }
 
     private fun initBirthdayWithId() {
-        if (oldBirthdayId == "-1") {
+        if (oldBirthdayId == NEW_BIRTHDAY_ID) {
             oldBirthday = Birthday()
             oldBirthdayId = oldBirthday.id
+            _fieldMessage.value = oldBirthday.textMessage
+            Log.d(TAG, "textMessage value: ${oldBirthday.textMessage}")
         } else {
             getBirthdayWithId(oldBirthdayId)
         }
@@ -104,8 +93,9 @@ class BirthdayDetailViewModel(var oldBirthdayId: String, application: Applicatio
 
     private fun getBirthdayWithId(id: String) {
         Log.d(TAG, "getBirthdayWithId: called")
-        val query = firebaseUtil.birthdayReference.child(firebaseUtil.mAuth.currentUser!!.uid).orderByKey()
-            .equalTo(id)
+        val query =
+            firebaseUtil.birthdayReference.child(firebaseUtil.mAuth.currentUser!!.uid).orderByKey()
+                .equalTo(id)
 
         query.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -124,13 +114,32 @@ class BirthdayDetailViewModel(var oldBirthdayId: String, application: Applicatio
         })
     }
 
+    fun loadFieldsWithContact(contactUri: Uri?) {
+        val projection = arrayOf(
+            ContactsContract.CommonDataKinds.Phone.NUMBER,
+            ContactsContract.Contacts.DISPLAY_NAME
+        )
+        val cursor: Cursor? =
+            context.contentResolver.query(contactUri!!, projection, null, null, null)
+        if (cursor != null && cursor.moveToFirst()) {
+            Log.d("Cursor not null ->", "not null")
+            val numberIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
+            val nameIndex = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)
+            val number = cursor.getString(numberIndex)
+            val name = cursor.getString(nameIndex)
+            Log.d("Number, Name", "$number->$name")
+            _fieldName.value = name
+            _fieldPhoneNumber.value = number
+        }
+        cursor!!.close()
+    }
 
 
-
+    // Factory class to pass id into viewmodel object
     class BirthdayDetailViewModelFactory(
         private val oldBirthdayId: String,
         private val application: Application
-    ) : ViewModelProvider.Factory{
+    ) : ViewModelProvider.Factory {
 
         @Suppress("unchecked_cast")
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {

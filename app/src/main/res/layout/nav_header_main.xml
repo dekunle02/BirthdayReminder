@@ -13,8 +13,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:scaleType="centerCrop"
-        app:tint="@color/primaryLightColor"
-        android:src="@drawable/ic_baloons_no_fill"
+        android:src="@drawable/logo_baloons"
        />
     <TextView
         android:layout_width="match_parent"

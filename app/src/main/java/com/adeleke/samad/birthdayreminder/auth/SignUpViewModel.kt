@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.adeleke.samad.birthdayreminder.R
 import com.adeleke.samad.birthdayreminder.util.isEmailFormatted
 import com.adeleke.samad.birthdayreminder.util.isPasswordFormatted
 import com.adeleke.samad.birthdayreminder.network.FirebaseUtil
@@ -42,8 +43,8 @@ class SignUpViewModel(application: Application) : AndroidViewModel(application) 
                 if (task.isSuccessful) {
                     _canNavigateToMain.value = true
                 } else {
-                    _snackMessage.value = "Sign in Failed. ${task.exception.toString()}"
-                    Log.d(TAG, "signIn is Failed! -> ${task.exception}")
+                    _snackMessage.value = context.getString(R.string.error) + task.exception!!.message
+                    Log.d(TAG, "signIn is Failed! -> ${task.exception!!.message}")
                 }
             }
     }
