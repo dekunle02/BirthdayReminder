@@ -11,11 +11,6 @@
         android:label="@string/birthdays"
         tools:layout="@layout/fragment_birthday_list" />
     <fragment
-        android:id="@+id/anniversaryListFragment"
-        android:name="com.adeleke.samad.birthdayreminder.anniversaryList.AnniversaryListFragment"
-        android:label="@string/anniversaries"
-        tools:layout="@layout/fragment_anniversary_list" />
-    <fragment
         android:id="@+id/archiveListFragment"
         android:name="com.adeleke.samad.birthdayreminder.archiveList.ArchiveListFragment"
         android:label="@string/archive"

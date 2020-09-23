@@ -9,12 +9,17 @@ data class Birthday (
     val monthOfBirth: String = "1",
     val yearOfBirth: String = "2000",
     val phoneNumber: String = "",
-    val textMessage: String = "Happy Birthday!!!"
+    val textMessage: String = "Happy Birthday!!!",
+    var notificationId: Int = generateRandomNumber()
 ) {
     companion object{
         private const val prefix = "birthday- "
         private fun generateID(): String {
             return prefix + UUID.randomUUID().toString()
+        }
+        private fun generateRandomNumber(): Int {
+            val random = Random()
+            return random.nextInt(5000)
         }
     }
 }

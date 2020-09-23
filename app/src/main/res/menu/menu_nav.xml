@@ -5,16 +5,12 @@
         <item
             android:id="@+id/birthdayListFragment"
             android:icon="@drawable/ic_birthday"
-            android:title="@string/birthdays"/>
-        <item
-            android:id="@+id/anniversaryListFragment"
-            android:icon="@drawable/ic_gift"
-            android:title="@string/anniversaries"/>
+            android:title="@string/birthdays" />
 
         <item
             android:id="@+id/archiveListFragment"
             android:icon="@drawable/ic_archive"
-            android:title="@string/archive"/>
+            android:title="@string/archive" />
     </group>
 
     <group android:id="@+id/others">
@@ -22,10 +18,7 @@
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_settings"
             android:title="@string/settings" />
-        <item
-            android:id="@+id/nav_share"
-            android:icon="@drawable/ic_share"
-            android:title="@string/share" />
+
         <item
             android:id="@+id/nav_contact"
             android:icon="@drawable/ic_email"

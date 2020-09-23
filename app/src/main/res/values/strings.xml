@@ -33,4 +33,11 @@
     <string name="undo_snackbar_message">UNDO</string>
     <string name="birthday_archived">Birthday archived</string>
     <string name="cannot_be_blank">This can not be blank.</string>
+    <string name="birthday_restored">Birthday Restored!</string>
+    <string name="delete">Delete</string>
+    <string name="are_you_sure_delete">Are you sure you want to permanently delete this birthday?</string>
+    <string name="yes">yes</string>
+    <string name="no">no</string>
+    <string name="delete_all">Delete all</string>
+    <string name="delete_everything_message">This will delete everything permanently.</string>
 </resources>

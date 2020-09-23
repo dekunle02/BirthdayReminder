@@ -24,7 +24,7 @@ class ArchiveListAdapter(activity: FragmentActivity) :
             notifyDataSetChanged()
             Log.d("adapter", "data set: ${data.size}")
         }
-    var myActivity = activity
+    private var myActivity = activity
 
     // Variables for implementing the archive functionality
     private var archivedItem: Birthday? =  null
@@ -59,7 +59,7 @@ class ArchiveListAdapter(activity: FragmentActivity) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArchiveViewHolder {
         val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.birthday_item, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.archive_item, parent, false)
         return ArchiveViewHolder(view)
     }
 

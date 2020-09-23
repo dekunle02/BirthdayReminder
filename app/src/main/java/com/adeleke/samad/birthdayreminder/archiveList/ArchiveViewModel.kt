@@ -54,4 +54,17 @@ class ArchiveViewModel(application: Application): AndroidViewModel(application) 
             }
         })
     }
+
+    fun restoreBirthdayFromArchive(birthdaySwiped: Birthday) {
+        firebaseUtil.restoreBirthdayFromArchive(birthdaySwiped)
+    }
+
+    fun finalDeleteBirthday(birthdaySwiped: Birthday) {
+        firebaseUtil.deleteBirthdayFromArchive(birthdaySwiped.id)
+    }
+
+    fun deleteAll() {
+        firebaseUtil.deleteAll()
+    }
+
 }

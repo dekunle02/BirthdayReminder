@@ -9,7 +9,6 @@ const val OAUTH_CLIENT_ID =
 const val GOOGLE_RC_SIGN_IN = 1
 
 const val FIREBASE_BIRTHDAY_NODE = "Birthdays"
-const val FIREBASE_ANNIVERSARY_NODE = "Anniversaries"
 const val FIREBASE_ARCHIVE_NODE = "Archived"
 
 
@@ -46,3 +45,6 @@ val monthSortMap = mapOf(
 const val NEW_BIRTHDAY_ID = "-1"
 const val ITEM_DETAIL_TAG = "detailTag"
 const val CONTACT_REQUEST_CODE = 100
+
+
+const val PRIMARY_CHANNEL_ID = "primary_notification_channel"

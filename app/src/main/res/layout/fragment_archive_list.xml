@@ -4,14 +4,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
+        <variable
+            name="viewModel"
+            type="com.adeleke.samad.birthdayreminder.archiveList.ArchiveViewModel" />
     </data>
 
     <FrameLayout
         android:id="@+id/constraintArchiveList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="8dp"
         tools:context=".archiveList.ArchiveListFragment">
 
         <androidx.recyclerview.widget.RecyclerView

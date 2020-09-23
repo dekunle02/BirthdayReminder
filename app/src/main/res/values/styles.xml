@@ -44,7 +44,7 @@
 
     <style name="Widget.App.FabStyle" parent="Widget.MaterialComponents.FloatingActionButton">
         <item name="backgroundTint">@color/colorAccent</item>
-        <item name="tint">@color/textColorSecondary</item>
+        <item name="tint">@color/textColorPrimary</item>
         <item name="elevation">6dp</item>
         <item name="fabSize">normal</item>
     </style>
