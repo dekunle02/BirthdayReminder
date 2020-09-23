@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.adeleke.samad.birthdayreminder.R
 import com.adeleke.samad.birthdayreminder.databinding.ActivityBirthdayDetailBinding
+import com.adeleke.samad.birthdayreminder.notification.NotificationHelper
 import com.adeleke.samad.birthdayreminder.util.CONTACT_REQUEST_CODE
 import com.adeleke.samad.birthdayreminder.util.ITEM_DETAIL_TAG
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -92,6 +93,10 @@ class BirthdayDetailActivity : AppCompatActivity() {
         viewModel.fieldMessage.observe(this, Observer {
             binding.messageEdit.setText(it)
         })
+
+        binding.button.setOnClickListener {
+            viewModel.bind()
+        }
 
         setContentView(binding.root)
     }

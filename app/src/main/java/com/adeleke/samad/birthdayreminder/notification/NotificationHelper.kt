@@ -16,6 +16,7 @@ import androidx.core.content.ContextCompat.startActivity
 import com.adeleke.samad.birthdayreminder.MainActivity
 import com.adeleke.samad.birthdayreminder.R
 import com.adeleke.samad.birthdayreminder.model.Birthday
+import com.adeleke.samad.birthdayreminder.util.NOTIFICATION_BROADCAST_REQUEST_CODE
 import com.adeleke.samad.birthdayreminder.util.PRIMARY_CHANNEL_ID
 
 class NotificationHelper private constructor(val context: Context) {
@@ -41,23 +42,30 @@ class NotificationHelper private constructor(val context: Context) {
 
         val notificationPendingIntent = PendingIntent.getActivity(
             context,
-            notificationId, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT
+            notificationId, editSendText(birthday), PendingIntent.FLAG_UPDATE_CURRENT
         )
 
-        val extraActionPendingIntent = PendingIntent.getActivity(
+        val extraIntent = Intent(context, NotificationReceiver::class.java)
+        extraIntent.setAction("ACTION_CUSTOM_NOTIFY")
+        extraIntent.putExtra("NUMBER", birthday.phoneNumber)
+        extraIntent.putExtra("MESSAGE", birthday.textMessage)
+
+        val extraActionPendingIntent = PendingIntent.getBroadcast(
             context,
-            notificationId, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT
+            NOTIFICATION_BROADCAST_REQUEST_CODE,
+            extraIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT
         )
 
         return NotificationCompat.Builder(context, PRIMARY_CHANNEL_ID)
             .setContentTitle("It's ${birthday.name}'s birthday!")
-            .setContentText("Send your composed message.")
+            .setContentText("Edit your composed message before sending.")
             .setSmallIcon(R.drawable.ic_birthday)
             .setContentIntent(notificationPendingIntent)
             .setAutoCancel(true)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setDefaults(NotificationCompat.DEFAULT_ALL)
-            .addAction(R.drawable.ic_message, "EDIT", extraActionPendingIntent)
+            .addAction(R.drawable.ic_message, "SEND", extraActionPendingIntent)
     }
 
     fun cancelNotification(notificationId: Int) {
@@ -84,7 +92,7 @@ class NotificationHelper private constructor(val context: Context) {
         }
     }
 
-    fun editSendText(birthday: Birthday) {
+    fun editSendText(birthday: Birthday): Intent? {
         val smsNumber = "smsto:" + birthday.phoneNumber
         val sms = birthday.textMessage
         // Create the intent.
@@ -95,15 +103,16 @@ class NotificationHelper private constructor(val context: Context) {
         smsIntent.putExtra("sms_body", sms)
         // If package resolves (target app installed), send intent.
         if (smsIntent.resolveActivity(context.packageManager) != null) {
-            startActivity(context, smsIntent, null)
+            return  smsIntent
         } else {
             Log.e("TAG", "Can't resolve app for ACTION_SENDTO Intent.")
         }
+        return null
     }
 
-    fun sendText(birthday: Birthday) {
-        val smsNumber = birthday.phoneNumber
-        val smsMessage = birthday.textMessage
+    fun sendText(smsNumber: String, smsMessage: String) {
+//        val smsNumber = birthday.phoneNumber
+//        val smsMessage = birthday.textMessage
 
         val mySmsManager = SmsManager.getDefault()
         mySmsManager.sendTextMessage(smsNumber,null, smsMessage, null, null)

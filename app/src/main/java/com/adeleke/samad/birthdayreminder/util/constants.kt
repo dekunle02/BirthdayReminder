@@ -45,6 +45,6 @@ val monthSortMap = mapOf(
 const val NEW_BIRTHDAY_ID = "-1"
 const val ITEM_DETAIL_TAG = "detailTag"
 const val CONTACT_REQUEST_CODE = 100
-
+const val NOTIFICATION_BROADCAST_REQUEST_CODE = 200
 
 const val PRIMARY_CHANNEL_ID = "primary_notification_channel"

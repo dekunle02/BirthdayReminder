@@ -2,7 +2,7 @@ package com.adeleke.samad.birthdayreminder.model
 
 import java.util.*
 
-data class Birthday (
+data class Birthday(
     var id: String = generateID(),
     val name: String = "Name",
     val dayOfBirth: String = "1",

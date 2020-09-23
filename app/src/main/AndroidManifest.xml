@@ -15,6 +15,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
+        <receiver android:name=".notification.NotificationReceiver"
+            android:enabled = "true"
+            android:exported = "true">
+
+        </receiver>
+
         <activity android:name=".birthdayDetail.BirthdayDetailActivity"></activity>
         <activity android:name=".MainActivity"></activity>
         <activity android:name=".auth.AuthActivity">

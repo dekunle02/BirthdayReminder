@@ -8,6 +8,7 @@ import android.util.Log
 import androidx.lifecycle.*
 import com.adeleke.samad.birthdayreminder.model.Birthday
 import com.adeleke.samad.birthdayreminder.network.FirebaseUtil
+import com.adeleke.samad.birthdayreminder.notification.NotificationHelper
 import com.adeleke.samad.birthdayreminder.util.NEW_BIRTHDAY_ID
 import com.adeleke.samad.birthdayreminder.util.convertToEasyDate
 import com.adeleke.samad.birthdayreminder.util.getSimpleDate
@@ -132,6 +133,11 @@ class BirthdayDetailViewModel(var oldBirthdayId: String, application: Applicatio
             _fieldPhoneNumber.value = number
         }
         cursor!!.close()
+    }
+
+    fun bind() {
+        val notificationHelper = NotificationHelper.getInstance(context)
+        notificationHelper.sendNotification(oldBirthday)
     }
 
 
