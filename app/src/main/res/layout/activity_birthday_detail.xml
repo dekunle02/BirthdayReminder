@@ -3,12 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
 
+    <data>
         <variable
             name="viewmodel"
             type="com.adeleke.samad.birthdayreminder.birthdayDetail.BirthdayDetailViewModel" />
     </data>
+
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/birthdayDetailConstraint"
@@ -31,149 +32,173 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
+            android:paddingBottom="32dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/loadFromContactButton"
-                style="@style/Widget.App.TextButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/birthday_input_margin_horizontal"
-                android:text="@string/import_a_contact"
-                android:textAllCaps="false"
-                app:layout_constraintBottom_toTopOf="@+id/editNameEditText"
-                app:layout_constraintEnd_toEndOf="parent" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/editNameEditText"
-                style="@style/Widget.App.TextInputLayout"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/birthday_input_margin_horizontal"
-                android:layout_marginTop="48dp"
-                android:layout_marginEnd="@dimen/birthday_input_margin_horizontal"
-                android:hint="@string/name"
-                app:errorEnabled="true"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                android:layout_height="match_parent"
+                >
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/nameEdit"
-                    android:layout_width="match_parent"
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/loadFromContactButton"
+                    style="@style/Widget.App.TextButton"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:inputType="textPersonName"
-                    android:maxLines="1"
-                    android:text="@={viewmodel.name}" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <LinearLayout
-                android:id="@+id/dateLinearLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/birthday_input_margin_horizontal"
-                android:layout_marginEnd="@dimen/birthday_input_margin_horizontal"
-                android:orientation="horizontal"
-                android:weightSum="100"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/editNameEditText">
+                    android:layout_marginEnd="@dimen/birthday_input_margin_horizontal"
+                    android:text="@string/import_a_contact"
+                    android:textAllCaps="false"
+                    app:layout_constraintBottom_toTopOf="@+id/editNameEditText"
+                    app:layout_constraintEnd_toEndOf="parent" />
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/editYearEditText"
+                    android:id="@+id/editNameEditText"
                     style="@style/Widget.App.TextInputLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="90"
-                    android:hint="@string/date_of_birth"
-                    app:errorEnabled="true">
+                    android:layout_marginStart="@dimen/birthday_input_margin_horizontal"
+                    android:layout_marginTop="48dp"
+                    android:layout_marginEnd="@dimen/birthday_input_margin_horizontal"
+                    android:hint="@string/name"
+                    app:errorEnabled="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/yearEdit"
+                        android:id="@+id/nameEdit"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:focusable="false"
-                        android:inputType="date"
+                        android:inputType="textPersonName"
                         android:maxLines="1"
-                        android:text="@={viewmodel.dateOfBirth}" />
+                        android:text="@={viewmodel.name}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <ImageButton
-                    android:id="@+id/calendarButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_gravity="center"
-                    android:layout_weight="10"
-                    android:backgroundTint="@color/colorPrimary"
-                    android:src="@drawable/ic_calendar" />
-            </LinearLayout>
-
-
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/editPhoneEditText"
-                style="@style/Widget.App.TextInputLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/birthday_input_margin_horizontal"
-                android:layout_marginEnd="@dimen/birthday_input_margin_horizontal"
-                android:hint="@string/phone_number"
-                app:errorEnabled="true"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/dateLinearLayout">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/phoneEdit"
+                <LinearLayout
+                    android:id="@+id/dateLinearLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="phone"
-                    android:maxLines="1"
-                    android:text="@={viewmodel.phoneNumber}" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_marginStart="@dimen/birthday_input_margin_horizontal"
+                    android:layout_marginEnd="@dimen/birthday_input_margin_horizontal"
+                    android:orientation="horizontal"
+                    android:weightSum="100"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/editNameEditText">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/editYearEditText"
+                        style="@style/Widget.App.TextInputLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="90"
+                        android:hint="@string/date_of_birth"
+                        app:errorEnabled="true">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/yearEdit"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:clickable="true"
+                            android:focusable="false"
+                            android:inputType="date"
+                            android:maxLines="1"
+                            android:text="@={viewmodel.dateOfBirth}" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <ImageButton
+                        android:id="@+id/calendarButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:layout_gravity="center"
+                        android:layout_weight="10"
+                        android:backgroundTint="@android:color/transparent"
+                        android:src="@drawable/ic_calendar" />
+                </LinearLayout>
 
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/editMessageEditText"
-                style="@style/Widget.App.TextInputLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/birthday_input_margin_horizontal"
-                android:layout_marginEnd="@dimen/birthday_input_margin_horizontal"
-                android:hint="@string/birthday_message_hint"
-                app:errorEnabled="true"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/editPhoneEditText">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/messageEdit"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/editPhoneEditText"
+                    style="@style/Widget.App.TextInputLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:gravity="top"
-                    android:imeOptions="flagNoExtractUi"
-                    android:inputType="textMultiLine"
-                    android:lines="50"
-                    android:text="@={viewmodel.message}" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/birthday_input_margin_horizontal"
+                    android:layout_marginEnd="@dimen/birthday_input_margin_horizontal"
+                    android:hint="@string/phone_number"
+                    app:errorEnabled="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/dateLinearLayout">
 
-            <Button
-                android:id="@+id/button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Button"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/phoneEdit"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="phone"
+                        android:maxLines="1"
+                        android:text="@={viewmodel.phoneNumber}" />
+                </com.google.android.material.textfield.TextInputLayout>
 
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/editMessageEditText"
+                    style="@style/Widget.App.TextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/birthday_input_margin_horizontal"
+                    android:layout_marginEnd="@dimen/birthday_input_margin_horizontal"
+                    android:hint="@string/birthday_message_hint"
+                    app:errorEnabled="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/editPhoneEditText">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/messageEdit"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:gravity="top"
+                        android:imeOptions="flagNoExtractUi"
+                        android:inputType="textMultiLine"
+                        android:lines="50"
+                        android:text="@={viewmodel.message}" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/editNoteEditText"
+                    style="@style/Widget.App.TextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/birthday_input_margin_horizontal"
+                    android:layout_marginEnd="@dimen/birthday_input_margin_horizontal"
+                    android:hint="@string/notes"
+                    app:errorEnabled="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/editMessageEditText">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/noteEdit"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:gravity="top"
+                        android:imeOptions="flagNoExtractUi"
+                        android:inputType="textMultiLine"
+                        android:lines="50"
+                        android:text="@={viewmodel.note}" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

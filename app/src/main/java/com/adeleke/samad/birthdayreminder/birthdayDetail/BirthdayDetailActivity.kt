@@ -10,7 +10,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.adeleke.samad.birthdayreminder.R
 import com.adeleke.samad.birthdayreminder.databinding.ActivityBirthdayDetailBinding
-import com.adeleke.samad.birthdayreminder.notification.NotificationHelper
 import com.adeleke.samad.birthdayreminder.util.CONTACT_REQUEST_CODE
 import com.adeleke.samad.birthdayreminder.util.ITEM_DETAIL_TAG
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -18,11 +17,9 @@ import com.google.android.material.datepicker.MaterialDatePicker
 class BirthdayDetailActivity : AppCompatActivity() {
     private val TAG = javaClass.simpleName
 
-    enum class Mode { EDIT, VIEW }
 
     private lateinit var binding: ActivityBirthdayDetailBinding
     private lateinit var viewModel: BirthdayDetailViewModel
-    private var mode = Mode.VIEW
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,6 +66,7 @@ class BirthdayDetailActivity : AppCompatActivity() {
             ViewModelProvider(this, viewModelFactory).get(BirthdayDetailViewModel::class.java)
         binding.viewmodel = viewModel
 
+
         //Click handlers
         binding.editYearEditText.setOnClickListener {
             showDatePicker()
@@ -79,6 +77,7 @@ class BirthdayDetailActivity : AppCompatActivity() {
         binding.loadFromContactButton.setOnClickListener {
             getContact()
         }
+
 
         // observables
         viewModel.fieldName.observe(this, Observer {
@@ -93,10 +92,11 @@ class BirthdayDetailActivity : AppCompatActivity() {
         viewModel.fieldMessage.observe(this, Observer {
             binding.messageEdit.setText(it)
         })
+        viewModel.fieldNote.observe(this, Observer {
+            binding.noteEdit.setText(it)
+        })
 
-        binding.button.setOnClickListener {
-            viewModel.bind()
-        }
+
 
         setContentView(binding.root)
     }
@@ -124,6 +124,15 @@ class BirthdayDetailActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == CONTACT_REQUEST_CODE && resultCode == RESULT_OK) {
+            val contactUri = data!!.data
+            viewModel.loadFieldsWithContact(contactUri)
+        }
+    }
+
+
     private fun showDatePicker() {
         val builder = MaterialDatePicker.Builder.datePicker()
         val picker = builder.build()
@@ -133,26 +142,38 @@ class BirthdayDetailActivity : AppCompatActivity() {
         picker.show(supportFragmentManager, TAG)
     }
 
+
     private fun inputFieldsAreCorrect(): Boolean {
         val enteredName = binding.nameEdit.text.toString()
         val enteredDate = binding.yearEdit.text.toString()
         val enteredNumber = binding.phoneEdit.text.toString()
         val enteredMessage = binding.messageEdit.text.toString()
+        val enteredNote = binding.noteEdit.text.toString()
 
-        return if (enteredName.isNullOrEmpty()) {
-            binding.editNameEditText.error = getString(R.string.cannot_be_blank)
-            false
-        } else if (enteredDate.isNullOrEmpty()) {
-            binding.editYearEditText.error = getString(R.string.cannot_be_blank)
-            false
-        } else if (enteredNumber.isNullOrEmpty()) {
-            binding.editPhoneEditText.error = getString(R.string.cannot_be_blank)
-            false
-        } else if (enteredMessage.isNullOrEmpty()) {
-            binding.editMessageEditText.error = getString(R.string.cannot_be_blank)
-            false
-        } else {
-            true
+        return when {
+            enteredName.isNullOrEmpty() -> {
+                binding.editNameEditText.error = getString(R.string.cannot_be_blank)
+                false
+            }
+            enteredDate.isNullOrEmpty() -> {
+                binding.editYearEditText.error = getString(R.string.cannot_be_blank)
+                false
+            }
+            enteredNumber.isNullOrEmpty() -> {
+                binding.editPhoneEditText.error = getString(R.string.cannot_be_blank)
+                false
+            }
+            enteredMessage.isNullOrEmpty() -> {
+                binding.editMessageEditText.error = getString(R.string.cannot_be_blank)
+                false
+            }
+            enteredNote.isNullOrEmpty() -> {
+                binding.noteEdit.setText("")
+                true
+            }
+            else -> {
+                true
+            }
         }
     }
 
@@ -163,14 +184,5 @@ class BirthdayDetailActivity : AppCompatActivity() {
             startActivityForResult(intent, CONTACT_REQUEST_CODE)
         }
     }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == CONTACT_REQUEST_CODE && resultCode == RESULT_OK) {
-            val contactUri = data!!.data
-            viewModel.loadFieldsWithContact(contactUri)
-        }
-    }
-
 
 }

@@ -1,13 +1,18 @@
 package com.adeleke.samad.birthdayreminder.birthdayList
 
+import android.app.AlarmManager
 import android.app.Application
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.adeleke.samad.birthdayreminder.model.Birthday
 import com.adeleke.samad.birthdayreminder.network.FirebaseUtil
+import com.adeleke.samad.birthdayreminder.notification.NotificationHelper
+import com.adeleke.samad.birthdayreminder.notification.NotificationReceiver
 import com.adeleke.samad.birthdayreminder.util.monthSortMap
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -17,6 +22,7 @@ class BirthdayListViewModel(application: Application) : AndroidViewModel(applica
     private val TAG: String = javaClass.simpleName
     private val context: Context = application.applicationContext
     private val firebaseUtil = FirebaseUtil.getInstance(context)
+    private val alarmManager: AlarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
 
     // Observables
@@ -29,9 +35,7 @@ class BirthdayListViewModel(application: Application) : AndroidViewModel(applica
         get() = _recyclerData
 
 
-
     fun populateRecyclerData() {
-        Log.d(TAG, "populateRecyclerData: called")
 
         val query =
             firebaseUtil.birthdayReference.child(firebaseUtil.mAuth.currentUser!!.uid).orderByKey()
@@ -40,24 +44,18 @@ class BirthdayListViewModel(application: Application) : AndroidViewModel(applica
             override fun onDataChange(snapshot: DataSnapshot) {
                 val myList = mutableListOf<Birthday>()
                 if (snapshot == null) {
-                    Log.d(TAG, "onDataChange: Snapshot is null. New USER")
                     _recyclerData.value = myList
                 } else {
                     for (singleSnapshot in snapshot.children) {
                         val birthday = singleSnapshot.getValue(Birthday::class.java)!!
                         myList.add(birthday)
                     }
-                    Log.d(TAG, "onDataChange: $myList")
                     _recyclerData.value = myList
                     filterByMonth()
                 }
-
             }
-
             override fun onCancelled(error: DatabaseError) {
-                Log.d(TAG, "getBirthdayListRequest: cancelled")
             }
-
         })
     }
 
@@ -78,8 +76,15 @@ class BirthdayListViewModel(application: Application) : AndroidViewModel(applica
     }
 
     fun archiveBirthdayAtPosition(position: Int) {
-        Log.d(TAG, "archiveBirthdayAtPosition: ${_recyclerData.value}")
         val birthdayAtPosition = _recyclerData.value!![position]
+        val notificationIntent: Intent = Intent(context, NotificationReceiver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            birthdayAtPosition.notificationId,
+            notificationIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
+        alarmManager.cancel(pendingIntent)
         firebaseUtil.archiveBirthday(birthdayAtPosition)
     }
 

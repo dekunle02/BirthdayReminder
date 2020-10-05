@@ -1,17 +1,17 @@
 package com.adeleke.samad.birthdayreminder.birthdayDetail
 
+import android.app.AlarmManager
 import android.app.Application
+import android.app.PendingIntent
+import android.content.Context.ALARM_SERVICE
 import android.database.Cursor
 import android.net.Uri
 import android.provider.ContactsContract
 import android.util.Log
 import androidx.lifecycle.*
-import com.adeleke.samad.birthdayreminder.model.Birthday
+import com.adeleke.samad.birthdayreminder.model.*
 import com.adeleke.samad.birthdayreminder.network.FirebaseUtil
-import com.adeleke.samad.birthdayreminder.notification.NotificationHelper
-import com.adeleke.samad.birthdayreminder.util.NEW_BIRTHDAY_ID
-import com.adeleke.samad.birthdayreminder.util.convertToEasyDate
-import com.adeleke.samad.birthdayreminder.util.getSimpleDate
+import com.adeleke.samad.birthdayreminder.util.*
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -23,6 +23,7 @@ class BirthdayDetailViewModel(var oldBirthdayId: String, application: Applicatio
 
     private lateinit var oldBirthday: Birthday
     private var firebaseUtil: FirebaseUtil
+    private val alarmManager: AlarmManager = context.getSystemService(ALARM_SERVICE) as AlarmManager
 
 
     // Two way observables
@@ -30,6 +31,7 @@ class BirthdayDetailViewModel(var oldBirthdayId: String, application: Applicatio
     val dateOfBirth = MutableLiveData<String>()
     val phoneNumber = MutableLiveData<String>()
     val message = MutableLiveData<String>()
+    val note = MutableLiveData<String>()
 
 
     private val _fieldName = MutableLiveData<String>()
@@ -45,6 +47,9 @@ class BirthdayDetailViewModel(var oldBirthdayId: String, application: Applicatio
     private val _fieldMessage = MutableLiveData<String>()
     val fieldMessage: LiveData<String>
         get() = _fieldMessage
+    private val _fieldNote = MutableLiveData<String>()
+    val fieldNote: LiveData<String>
+        get() = _fieldNote
 
 
     // Observables
@@ -54,6 +59,11 @@ class BirthdayDetailViewModel(var oldBirthdayId: String, application: Applicatio
 
     init {
         firebaseUtil = FirebaseUtil.getInstance(context)
+        _fieldName.value = ""
+        _fieldDate.value = ""
+        _fieldPhoneNumber.value = ""
+        _fieldMessage.value = ""
+        _fieldNote.value = ""
         initBirthdayWithId()
     }
 
@@ -61,6 +71,7 @@ class BirthdayDetailViewModel(var oldBirthdayId: String, application: Applicatio
     fun addOrUpdateBirthday() {
         val newBirthday = makeBirthdayObjectFromField()
         FirebaseUtil.getInstance(context).addBirthdayToBirthdays(newBirthday!!)
+        newBirthday.setAlarm(context, alarmManager)
     }
 
 
@@ -68,25 +79,23 @@ class BirthdayDetailViewModel(var oldBirthdayId: String, application: Applicatio
         val rawDate = dateOfBirth.value!!
         val dateMap = convertToEasyDate(rawDate)
 
-        val birthday = Birthday(
+        return Birthday(
             id = oldBirthdayId,
             name = name.value!!.capitalize(),
-            dayOfBirth = dateMap["day"]!!,
-            monthOfBirth = dateMap["month"]!!,
-            yearOfBirth = dateMap["year"]!!,
-            phoneNumber = phoneNumber.value!!,
-            textMessage = message.value!!
+            dayOfBirth = dateMap["day"],
+            monthOfBirth = dateMap["month"],
+            yearOfBirth = dateMap["year"],
+            phoneNumber = phoneNumber.value,
+            textMessage = message.value!!,
+            notes = note.value!!
         )
-        Log.d(TAG, "birthday object made -> $birthday")
-        return birthday
     }
 
     private fun initBirthdayWithId() {
         if (oldBirthdayId == NEW_BIRTHDAY_ID) {
             oldBirthday = Birthday()
-            oldBirthdayId = oldBirthday.id
+            oldBirthdayId = oldBirthday.id!!
             _fieldMessage.value = oldBirthday.textMessage
-            Log.d(TAG, "textMessage value: ${oldBirthday.textMessage}")
         } else {
             getBirthdayWithId(oldBirthdayId)
         }
@@ -107,6 +116,7 @@ class BirthdayDetailViewModel(var oldBirthdayId: String, application: Applicatio
                 _fieldDate.value = oldBirthday.getSimpleDate()
                 _fieldPhoneNumber.value = oldBirthday.phoneNumber
                 _fieldMessage.value = oldBirthday.textMessage
+                _fieldNote.value = oldBirthday.notes
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -135,11 +145,6 @@ class BirthdayDetailViewModel(var oldBirthdayId: String, application: Applicatio
         cursor!!.close()
     }
 
-    fun bind() {
-        val notificationHelper = NotificationHelper.getInstance(context)
-        notificationHelper.sendNotification(oldBirthday)
-    }
-
 
     // Factory class to pass id into viewmodel object
     class BirthdayDetailViewModelFactory(
@@ -154,7 +159,6 @@ class BirthdayDetailViewModel(var oldBirthdayId: String, application: Applicatio
             }
             throw IllegalArgumentException("Unknown ViewModel class")
         }
-
     }
 
 }

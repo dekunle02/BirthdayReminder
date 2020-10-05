@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <EditTextPreference
+        android:inputType="textCapWords"
+        app:summary="What would you like me to call you?"
+        android:key="display_name"
+        android:defaultValue="Nobody"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        app:iconSpaceReserved="false"
+        android:singleLine="true"
+        android:title="Display name" />
+
+    <SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="night_switch"
+        android:title="Night mode"
+        app:iconSpaceReserved="false"
+        android:summary="Turn this Option on or Off"/>
+
+</PreferenceScreen>

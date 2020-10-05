@@ -61,6 +61,14 @@ class SignUpFragment : Fragment() {
                 (binding.signUpPasswordEditText).error = null
             }
             false
+
+        }
+
+        binding.confirmPasswordTI.setOnKeyListener { _, _, _ ->
+            if (binding.confirmPasswordTI.text.toString() == binding.signUpEmailTI.text.toString()) {
+                binding.confirmPasswordEditText.error = null
+            }
+            false
         }
 
         // Button CLick Listeners
@@ -80,6 +88,7 @@ class SignUpFragment : Fragment() {
         // Observables
         viewModel.showProgressBar.observe(viewLifecycleOwner, Observer { canShow ->
             binding.signUpProgressBar.visibility = if (canShow!!) View.VISIBLE else View.GONE
+            binding.logoImageView.visibility = if(canShow) View.INVISIBLE else View.VISIBLE
         })
 
         viewModel.snackMessage.observe(viewLifecycleOwner, Observer { message ->
@@ -128,6 +137,7 @@ class SignUpFragment : Fragment() {
     private fun inputFieldsAreCorrect(): Boolean {
         val enteredEmail = binding.signUpEmailTI.text.toString()
         val enteredPassword = binding.signUpPasswordTI.text.toString()
+        val confirmedPassword = binding.confirmPasswordTI.text.toString()
 
         return if (!enteredEmail.isEmailFormatted()) {
             binding.signUpEmailEditText.error = getString(R.string.enter_valid_email)
@@ -135,7 +145,14 @@ class SignUpFragment : Fragment() {
         } else if (!enteredPassword.isPasswordFormatted()) {
             binding.signUpPasswordEditText.error = getString(R.string.enter_valid_password)
             false
-        } else {
+        } else if (!confirmedPassword.isPasswordFormatted()){
+            binding.confirmPasswordEditText.error = getString(R.string.enter_valid_password)
+            false
+        } else if (confirmedPassword != enteredPassword) {
+            binding.confirmPasswordEditText.error = getString(R.string.password_not_match)
+            false
+        }
+        else {
             true
         }
     }

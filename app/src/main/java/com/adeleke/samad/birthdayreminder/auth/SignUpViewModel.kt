@@ -41,6 +41,7 @@ class SignUpViewModel(application: Application) : AndroidViewModel(application) 
             .addOnCompleteListener { task ->
                 _showProgressBar.value = false
                 if (task.isSuccessful) {
+                    firebaseUtil.sendVerificationEmail()
                     _canNavigateToMain.value = true
                 } else {
                     _snackMessage.value = context.getString(R.string.error) + task.exception!!.message
@@ -48,6 +49,7 @@ class SignUpViewModel(application: Application) : AndroidViewModel(application) 
                 }
             }
     }
+
 
     fun firebaseAuthWithGoogle(idToken: String) {
         _showProgressBar.value = true

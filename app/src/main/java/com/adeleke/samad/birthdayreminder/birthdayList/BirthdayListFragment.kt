@@ -44,6 +44,11 @@ class BirthdayListFragment : Fragment() {
         // Have access to Toolbar
         setHasOptionsMenu(true)
 
+        // Make it show the empty birthdays by default
+        binding.birthdayRecyclerView.visibility = View.GONE
+        binding.emptyListLayout.visibility = View.VISIBLE
+
+
         // Set up recyclerView
         binding.birthdayRecyclerView.layoutManager = LinearLayoutManager(context)
         val adapter = BirthdayListAdapter(requireActivity())
@@ -51,6 +56,13 @@ class BirthdayListFragment : Fragment() {
         viewModel.recyclerData.observe(viewLifecycleOwner, Observer {
             if (it != null) {
                 adapter.data = it
+                if (it.isEmpty()) {
+                    binding.birthdayRecyclerView.visibility = View.GONE
+                    binding.emptyListLayout.visibility = View.VISIBLE
+                } else {
+                    binding.birthdayRecyclerView.visibility = View.VISIBLE
+                    binding.emptyListLayout.visibility = View.GONE
+                }
             }
         })
 
@@ -87,12 +99,6 @@ class BirthdayListFragment : Fragment() {
                     adapter.notifyItemInserted(pos)
                 }.setActionTextColor(resources.getColor(R.color.yellow))
                     .show()
-
-//                viewModel.populateRecyclerData()
-
-//                val archiveWasUndone = adapter.archiveItem(pos, viewHolder)
-//                if (!archiveWasUndone)
-//                    viewModel.archiveBirthdayAtPosition(pos)
             }
 
             override fun onChildDraw(

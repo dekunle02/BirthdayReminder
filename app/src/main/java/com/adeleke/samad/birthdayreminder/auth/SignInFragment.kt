@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -17,7 +18,6 @@ import com.adeleke.samad.birthdayreminder.util.*
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
-import com.google.android.material.textfield.TextInputLayout
 
 class SignInFragment : Fragment() {
     private val TAG = javaClass.simpleName
@@ -69,11 +69,35 @@ class SignInFragment : Fragment() {
                 viewModel.signIn()
             }
         }
+        binding.forgotPasswordButton.setOnClickListener {
+            if (binding.signInEmailTI.text.toString().isEmailFormatted()) {
+                val alertDialogBuilder = AlertDialog.Builder(requireContext())
+                alertDialogBuilder.setIcon(R.drawable.ic_warning)
+                    .setCancelable(true)
+                    .setTitle("Send password recovery email")
+                    .setMessage("Do you want to send to ${binding.signInEmailTI.text.toString()}?")
+                    .setPositiveButton(
+                        getString(R.string.yes)
+                    ) { p0, p1 ->
+                        viewModel.sendForgotPasswordEmail()
+                    }
+                    .setNegativeButton(
+                        getString(R.string.no)
+                    ) { dialogInterface, p1 ->
+                        dialogInterface!!.cancel()
+                    }
+                val alertDialog = alertDialogBuilder.create()
+                alertDialog.show()
+            } else {
+                binding.signInEmailEditText.error =  getString(R.string.enter_valid_email)
+            }
+        }
 
 
         // Observables
         viewModel.showProgressBar.observe(viewLifecycleOwner, Observer { canShow ->
             binding.signInProgressBar.visibility = if (canShow!!) View.VISIBLE else View.GONE
+            binding.logoImageView.visibility = if (canShow!!) View.INVISIBLE else View.VISIBLE
         })
 
         viewModel.snackMessage.observe(viewLifecycleOwner, Observer { message ->

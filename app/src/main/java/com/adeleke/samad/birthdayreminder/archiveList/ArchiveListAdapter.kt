@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.adeleke.samad.birthdayreminder.R
 //import com.adeleke.samad.birthdayreminder.birthdayList.BirthdayListFragmentDirections
 import com.adeleke.samad.birthdayreminder.model.Birthday
+import com.adeleke.samad.birthdayreminder.model.getSimpleDate
 import com.adeleke.samad.birthdayreminder.util.colorMap
-import com.adeleke.samad.birthdayreminder.util.getSimpleDate
 import com.google.android.material.snackbar.Snackbar
 
 class ArchiveListAdapter(activity: FragmentActivity) :

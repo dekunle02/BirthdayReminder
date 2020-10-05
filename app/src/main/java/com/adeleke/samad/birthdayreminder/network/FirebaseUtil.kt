@@ -11,8 +11,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 
 class FirebaseUtil private constructor(context: Context) {
     private val TAG: String = FirebaseUtil::class.java.simpleName
@@ -55,9 +54,30 @@ class FirebaseUtil private constructor(context: Context) {
         archiveReference = database.getReference(FIREBASE_ARCHIVE_NODE)
     }
 
+    private fun getBirthdayByMonth() {
+        Log.d(TAG, "getBirthdayByMonth: CALLED")
+        val query = birthdayReference.child(mAuth.currentUser!!.uid).orderByChild("monthOfBirth").equalTo("Oct")
+        query.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val myList = mutableListOf<Birthday>()
+                if (snapshot == null) {
+                    Log.d(TAG, "onDataChange: snapShot is NULL")
+                } else {
+                    for (singleSnapshot in snapshot.children) {
+                        val birthday = singleSnapshot.getValue(Birthday::class.java)!!
+                        Log.d(TAG, "onDataChange: $birthday")
+                        myList.add(birthday)
+                    }
+                }
+            }
+            override fun onCancelled(error: DatabaseError) {
+            }
+        })
+    }
+
 
     fun addBirthdayToBirthdays(birthday: Birthday) {
-        birthdayReference.child(mAuth.currentUser!!.uid).child(birthday.id).setValue(birthday)
+        birthdayReference.child(mAuth.currentUser!!.uid).child(birthday.id!!).setValue(birthday)
             .addOnCompleteListener {
                 if (it.isSuccessful) {
                     Log.d(TAG, "Birthday inserted successfully!")
@@ -68,7 +88,7 @@ class FirebaseUtil private constructor(context: Context) {
     }
 
     private fun deleteBirthdayFromBirthdays(birthdayId: String) {
-        birthdayReference.child(mAuth.currentUser!!.uid).child(birthdayId).removeValue()
+        birthdayReference.child(mAuth.currentUser!!.uid).child(birthdayId!!).removeValue()
             .addOnCompleteListener {
                 if (it.isSuccessful) {
                     Log.d(TAG, "Birthday deleted successfully!")
@@ -80,7 +100,7 @@ class FirebaseUtil private constructor(context: Context) {
 
 
     private fun addBirthdayToArchive(birthday: Birthday) {
-        archiveReference.child(mAuth.currentUser!!.uid).child(birthday.id).setValue(birthday)
+        archiveReference.child(mAuth.currentUser!!.uid).child(birthday.id!!).setValue(birthday)
             .addOnCompleteListener {
                 if (it.isSuccessful) {
                     Log.d(TAG, "Birthday inserted successfully!")
@@ -91,7 +111,7 @@ class FirebaseUtil private constructor(context: Context) {
     }
 
     fun deleteBirthdayFromArchive(birthdayId: String) {
-        archiveReference.child(mAuth.currentUser!!.uid).child(birthdayId).removeValue()
+        archiveReference.child(mAuth.currentUser!!.uid).child(birthdayId!!).removeValue()
             .addOnCompleteListener {
                 if (it.isSuccessful) {
                     Log.d(TAG, "Birthday deleted successfully!")
@@ -101,13 +121,31 @@ class FirebaseUtil private constructor(context: Context) {
             }
     }
 
+    fun sendVerificationEmail() {
+        mAuth.currentUser!!.sendEmailVerification()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Log.d(TAG, "Email successfully sent!")
+                }
+            }
+    }
+
+    fun sendPasswordResetPassword(emailAddress: String) {
+        mAuth.sendPasswordResetEmail(emailAddress)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Log.d(TAG, "Email sent!")
+                }
+            }
+    }
+
     fun archiveBirthday(birthday: Birthday) {
-        deleteBirthdayFromBirthdays(birthday.id)
+        deleteBirthdayFromBirthdays(birthday.id!!)
         addBirthdayToArchive(birthday)
     }
 
     fun restoreBirthdayFromArchive(birthday: Birthday) {
-        deleteBirthdayFromArchive(birthday.id)
+        deleteBirthdayFromArchive(birthday.id!!)
         addBirthdayToBirthdays(birthday)
     }
 

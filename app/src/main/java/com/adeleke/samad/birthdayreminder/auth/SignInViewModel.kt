@@ -72,6 +72,10 @@ class SignInViewModel(application: Application): AndroidViewModel(application) {
         _canNavigateToMain.value = false
     }
 
+    fun sendForgotPasswordEmail() {
+        firebaseUtil.sendPasswordResetPassword(email.value!!)
+        _snackMessage.value = context.getString(R.string.email_sent)
+    }
 
 
 }

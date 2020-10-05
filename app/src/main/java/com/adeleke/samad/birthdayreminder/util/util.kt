@@ -3,12 +3,17 @@ package com.adeleke.samad.birthdayreminder.util
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.util.Patterns
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import com.adeleke.samad.birthdayreminder.MainActivity
 import com.adeleke.samad.birthdayreminder.model.Birthday
 import com.google.android.material.snackbar.Snackbar
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
+import java.util.*
 
 // String extension functions that help check proper EditText user inputs
 fun String.isEmailFormatted(): Boolean {
@@ -46,17 +51,16 @@ fun Activity.navigateToMain() {
     this.finish()
 }
 
+
 // Function to convert the date given by the Material Date Picker dialog
-fun convertToEasyDate(date: String): Map<String, String> {
-    val pattern = Regex(",*\\s")
-    val arr = date.split(pattern)
+fun convertToEasyDate(dateString: String): Map<String, String> {
+    val df: DateTimeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
+    val date = LocalDate.parse(dateString, df)
+
     return mapOf(
-        "day" to arr[1],
-        "month" to arr[0],
-        "year" to arr[2]
+        "day" to "${date.dayOfMonth}",
+        "month" to reversedMonthSort[date.monthValue]!!,
+        "year" to "${date.year}"
         )
 }
 
-fun Birthday.getSimpleDate(): String {
-    return this.monthOfBirth + " " + this.dayOfBirth + ", " + this.yearOfBirth
-}
