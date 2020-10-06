@@ -8,6 +8,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
+import android.os.Handler
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.adeleke.samad.birthdayreminder.MainActivity
@@ -52,11 +53,11 @@ class NotificationHelper private constructor(val context: Context) {
         val notifyBuilder = getNotificationBuilder(birthday)
         mNotifyManager.notify(birthday.notificationId, notifyBuilder!!.build())
     }
-
-    fun sendMonthNotification(month: String) {
-        val notifyBuilder = getMonthlyNotificationBuilder(month)
-        mNotifyManager.notify(MONTH_NOTIFICATION_ID, notifyBuilder!!.build())
-    }
+//
+//    fun sendMonthNotification(month: String) {
+//        val notifyBuilder = getMonthlyNotificationBuilder(month)
+//        mNotifyManager.notify(MONTH_NOTIFICATION_ID, notifyBuilder!!.build())
+//    }
 
 
     // Builder responsible for constructing notification UI and the pending intents associated with it,
@@ -76,34 +77,34 @@ class NotificationHelper private constructor(val context: Context) {
 //            .addAction(R.drawable.ic_message, context.getString(R.string.send), smsPendingIntent)
     }
 
-    private fun getMonthlyNotificationBuilder(month: String): NotificationCompat.Builder? {
+    fun sendMonthNotification(month: String){
         val pendingIntent = getBirthdayListPendingIntent()
         val firebaseUtil = FirebaseUtil.getInstance(context)
-        val birthdayList = mutableListOf<Birthday>()
+
         val query = firebaseUtil.birthdayReference.child(firebaseUtil.mAuth.currentUser!!.uid)
             .orderByChild("monthOfBirth").equalTo(month)
         query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
+                val birthdayList = mutableListOf<Birthday>()
                 for (singleSnapshot in snapshot.children) {
                     val birthday = singleSnapshot.getValue(Birthday::class.java)!!
-                    Log.d(TAG, "onDataChange: $birthday")
                     birthdayList.add(birthday)
                 }
+                val notifyString = makeMonthNotificationString(birthdayList)
+                val builder = NotificationCompat.Builder(context, PRIMARY_CHANNEL_ID)
+                    .setContentTitle("Birthdays this month!")
+                    .setContentText(notifyString)
+                    .setSmallIcon(R.drawable.ic_birthday)
+                    .setContentIntent(pendingIntent)
+                    .setAutoCancel(true)
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setDefaults(NotificationCompat.DEFAULT_ALL)
+                mNotifyManager.notify(MONTH_NOTIFICATION_ID, builder.build())
             }
 
             override fun onCancelled(error: DatabaseError) {
             }
         })
-
-        val notifyString = makeMonthNotificationString(birthdayList)
-        return NotificationCompat.Builder(context, PRIMARY_CHANNEL_ID)
-            .setContentTitle("Birthdays this month!")
-            .setContentText(notifyString)
-            .setSmallIcon(R.drawable.ic_birthday)
-            .setContentIntent(pendingIntent)
-            .setAutoCancel(true)
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setDefaults(NotificationCompat.DEFAULT_ALL)
     }
 
 
@@ -154,7 +155,6 @@ class NotificationHelper private constructor(val context: Context) {
     }
 
 
-    // Construct the channel in the settings for Android Oreo and higher
     private fun createNotificationChannel() {
         mNotifyManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

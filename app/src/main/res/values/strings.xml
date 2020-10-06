@@ -50,6 +50,7 @@
     <string name="password_not_match">The passwords do not match</string>
     <string name="name_changed">Name changed!</string>
     <string name="email_sent">Email sent!</string>
+    <string name="birthday_saved">Birthday saved!</string>
     <string-array name="languages">
         <item>EN</item>
         <item>FR</item>

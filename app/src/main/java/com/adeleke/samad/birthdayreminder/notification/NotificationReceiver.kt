@@ -27,6 +27,7 @@ class NotificationReceiver : BroadcastReceiver() {
         val intentAction = intent!!.action
         when (intentAction!!) {
             BIRTHDAY_NOTIFICATION_ACTION -> {
+                Log.d(TAG, "onReceive: Broadcast for Birthday received")
                 val birthdayJson: String? = intent.getStringExtra(BIRTHDAY_JSON_INTENT_TAG)
                 val birthday: Birthday = makeBirthdayFromJSON(birthdayJson!!)!!
                 notificationHelper.sendNotification(birthday)

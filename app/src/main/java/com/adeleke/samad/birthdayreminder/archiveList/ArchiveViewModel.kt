@@ -8,17 +8,19 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.adeleke.samad.birthdayreminder.model.Birthday
+import com.adeleke.samad.birthdayreminder.model.cancelAlarm
 import com.adeleke.samad.birthdayreminder.model.setAlarm
 import com.adeleke.samad.birthdayreminder.network.FirebaseUtil
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 
-class ArchiveViewModel(application: Application): AndroidViewModel(application) {
+class ArchiveViewModel(application: Application) : AndroidViewModel(application) {
     private val TAG: String = javaClass.simpleName
     private val context: Context = application.applicationContext
     private val firebaseUtil = FirebaseUtil.getInstance(context)
-    private val alarmManager: AlarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    private val alarmManager: AlarmManager =
+        context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
 
     // Observables
@@ -31,27 +33,21 @@ class ArchiveViewModel(application: Application): AndroidViewModel(application) 
         get() = _recyclerData
 
 
+    // Populates archive RecyclerView and removes each birthday's alarm
     fun populateRecyclerData() {
-        Log.d(TAG, "populateRecyclerData: called")
-
         val query =
             firebaseUtil.archiveReference.child(firebaseUtil.mAuth.currentUser!!.uid).orderByKey()
-
         query.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val myList = mutableListOf<Birthday>()
-                if (snapshot == null) {
-                    Log.d(TAG, "onDataChange: Snapshot is null. New USER")
-                    _recyclerData.value = myList
-                } else {
-                    for (singleSnapshot in snapshot.children) {
-                        val birthday = singleSnapshot.getValue(Birthday::class.java)!!
-                        myList.add(birthday)
-                    }
-                    Log.d(TAG, "onDataChange: $myList")
-                    _recyclerData.value = myList
+                for (singleSnapshot in snapshot.children) {
+                    val birthday = singleSnapshot.getValue(Birthday::class.java)!!
+                    myList.add(birthday)
                 }
-
+                _recyclerData.value = myList
+                for (birthday in myList) {
+                    birthday.cancelAlarm(context, alarmManager)
+                }
             }
             override fun onCancelled(error: DatabaseError) {
                 Log.d(TAG, "load: cancelled")
@@ -59,8 +55,8 @@ class ArchiveViewModel(application: Application): AndroidViewModel(application) 
         })
     }
 
+    // Functions for adding or removing item from archive
     fun restoreBirthdayFromArchive(birthdaySwiped: Birthday) {
-        birthdaySwiped.setAlarm(context, alarmManager)
         firebaseUtil.restoreBirthdayFromArchive(birthdaySwiped)
     }
 

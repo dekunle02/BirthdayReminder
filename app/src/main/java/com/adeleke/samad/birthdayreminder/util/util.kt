@@ -52,7 +52,7 @@ fun Activity.navigateToMain() {
 }
 
 
-// Function to convert the date given by the Material Date Picker dialog
+// Function to convert the date given by the Material Date Picker dialog to a map
 fun convertToEasyDate(dateString: String): Map<String, String> {
     val df: DateTimeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
     val date = LocalDate.parse(dateString, df)

@@ -27,8 +27,6 @@ import com.adeleke.samad.birthdayreminder.util.makeSimpleSnack
 import com.google.android.material.snackbar.Snackbar
 
 class BirthdayListFragment : Fragment() {
-    private val TAG = javaClass.simpleName
-
     private lateinit var binding: FragmentBirthdayListBinding
     private val viewModel: BirthdayListViewModel by viewModels()
 
@@ -66,7 +64,7 @@ class BirthdayListFragment : Fragment() {
             }
         })
 
-        // Set up the touch helper for swiping items on the recyclerview
+        // Set up the touch helper for swiping items on the recyclerview and adding them to the Archive List
         val itemTouchHelperCallback = object :
             ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
             val colorArchiveBackground = ColorDrawable(resources.getColor(R.color.archiveColor))
@@ -83,7 +81,6 @@ class BirthdayListFragment : Fragment() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDirection: Int) {
                 val pos = viewHolder.adapterPosition
-                Log.d(TAG, "onSwiped: $pos")
                 val birthdaySwiped = viewModel.recyclerData.value!![pos]
                 viewModel.archiveBirthdayAtPosition(pos)
                 adapter.notifyItemRemoved(pos)
@@ -191,6 +188,7 @@ class BirthdayListFragment : Fragment() {
         return binding.root
     }
 
+    // Each time the view is created, the viewModel should re populate the recyclerView Data
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.populateRecyclerData()
@@ -203,11 +201,11 @@ class BirthdayListFragment : Fragment() {
         return super.onOptionsItemSelected(item)
     }
 
+    // Shows the popUp for filtering the birthday List recyclerView
     private fun showFilteringPopUpMenu() {
         val view = activity?.findViewById<View>(R.id.action_filter) ?: return
         PopupMenu(requireContext(), view).run {
             menuInflater.inflate(R.menu.filter_lists, menu)
-
             setOnMenuItemClickListener {
                 when (it.itemId) {
                     R.id.filter_alphabetically -> viewModel.filterByAlphabetically()
@@ -219,6 +217,7 @@ class BirthdayListFragment : Fragment() {
         }
     }
 
+    // Navigates to the Birthday Detail Activity with a new Birthday ID so that a new Birthday object is created and shown to the user
     private fun navigateToNewBirthday() {
         val intent = Intent(activity, BirthdayDetailActivity::class.java)
         intent.putExtra(ITEM_DETAIL_TAG, NEW_BIRTHDAY_ID)

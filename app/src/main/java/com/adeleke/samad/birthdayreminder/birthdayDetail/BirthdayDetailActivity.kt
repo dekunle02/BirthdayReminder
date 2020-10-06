@@ -12,11 +12,11 @@ import com.adeleke.samad.birthdayreminder.R
 import com.adeleke.samad.birthdayreminder.databinding.ActivityBirthdayDetailBinding
 import com.adeleke.samad.birthdayreminder.util.CONTACT_REQUEST_CODE
 import com.adeleke.samad.birthdayreminder.util.ITEM_DETAIL_TAG
+import com.adeleke.samad.birthdayreminder.util.makeSimpleSnack
 import com.google.android.material.datepicker.MaterialDatePicker
 
 class BirthdayDetailActivity : AppCompatActivity() {
     private val TAG = javaClass.simpleName
-
 
     private lateinit var binding: ActivityBirthdayDetailBinding
     private lateinit var viewModel: BirthdayDetailViewModel
@@ -24,6 +24,7 @@ class BirthdayDetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityBirthdayDetailBinding.inflate(layoutInflater)
+        binding.lifecycleOwner = this
 
 
         // Setting up Toolbar
@@ -31,7 +32,7 @@ class BirthdayDetailActivity : AppCompatActivity() {
         supportActionBar!!.setHomeAsUpIndicator(R.drawable.ic_close)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-        // EditText settings
+        // EditText settings that clears errors when conditions are met
         binding.editNameEditText.setOnKeyListener { _, _, _ ->
             if (!binding.nameEdit.text.toString().isNullOrEmpty()) {
                 (binding.editNameEditText).error = null
@@ -80,23 +81,9 @@ class BirthdayDetailActivity : AppCompatActivity() {
 
 
         // observables
-        viewModel.fieldName.observe(this, Observer {
-            binding.nameEdit.setText(it)
+        viewModel.snackMessage.observe(this, Observer{
+            binding.noteEdit.makeSimpleSnack(it!!)
         })
-        viewModel.fieldDate.observe(this, Observer {
-            binding.yearEdit.setText(it)
-        })
-        viewModel.fieldPhoneNumber.observe(this, Observer {
-            binding.phoneEdit.setText(it)
-        })
-        viewModel.fieldMessage.observe(this, Observer {
-            binding.messageEdit.setText(it)
-        })
-        viewModel.fieldNote.observe(this, Observer {
-            binding.noteEdit.setText(it)
-        })
-
-
 
         setContentView(binding.root)
     }
@@ -124,14 +111,6 @@ class BirthdayDetailActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == CONTACT_REQUEST_CODE && resultCode == RESULT_OK) {
-            val contactUri = data!!.data
-            viewModel.loadFieldsWithContact(contactUri)
-        }
-    }
-
 
     private fun showDatePicker() {
         val builder = MaterialDatePicker.Builder.datePicker()
@@ -141,7 +120,6 @@ class BirthdayDetailActivity : AppCompatActivity() {
         }
         picker.show(supportFragmentManager, TAG)
     }
-
 
     private fun inputFieldsAreCorrect(): Boolean {
         val enteredName = binding.nameEdit.text.toString()
@@ -177,11 +155,20 @@ class BirthdayDetailActivity : AppCompatActivity() {
         }
     }
 
+    // Intent that gets contact information
     private fun getContact() {
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE
         if (intent.resolveActivity(packageManager) != null) {
             startActivityForResult(intent, CONTACT_REQUEST_CODE)
+        }
+    }
+    // The Activity result that receives chosen contact and passes it to the viewModel
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == CONTACT_REQUEST_CODE && resultCode == RESULT_OK) {
+            val contactUri = data!!.data
+            viewModel.loadFieldsWithContact(contactUri)
         }
     }
 
