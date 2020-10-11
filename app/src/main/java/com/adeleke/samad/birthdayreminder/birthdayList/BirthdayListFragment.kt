@@ -4,11 +4,11 @@ import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -21,14 +21,21 @@ import androidx.recyclerview.widget.RecyclerView
 import com.adeleke.samad.birthdayreminder.R
 import com.adeleke.samad.birthdayreminder.birthdayDetail.BirthdayDetailActivity
 import com.adeleke.samad.birthdayreminder.databinding.FragmentBirthdayListBinding
+import com.adeleke.samad.birthdayreminder.network.FirebaseUtil
 import com.adeleke.samad.birthdayreminder.util.ITEM_DETAIL_TAG
 import com.adeleke.samad.birthdayreminder.util.NEW_BIRTHDAY_ID
 import com.adeleke.samad.birthdayreminder.util.makeSimpleSnack
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 
 class BirthdayListFragment : Fragment() {
     private lateinit var binding: FragmentBirthdayListBinding
     private val viewModel: BirthdayListViewModel by viewModels()
+
+    private lateinit var firebaseUtil: FirebaseUtil
+    private lateinit var user: FirebaseUser
 
 
     override fun onCreateView(
@@ -175,9 +182,29 @@ class BirthdayListFragment : Fragment() {
         val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
         itemTouchHelper.attachToRecyclerView(binding.birthdayRecyclerView)
 
+
         // Click Listeners
         binding.addNewBirthdayFab.setOnClickListener {
-            navigateToNewBirthday()
+            firebaseUtil = FirebaseUtil.getInstance(requireContext())
+            user = FirebaseAuth.getInstance().currentUser!!
+
+            if (user.isEmailVerified) {
+                navigateToNewBirthday()
+            } else {
+                val builder = AlertDialog.Builder(requireContext())
+                val dialogView: View =
+                    LayoutInflater.from(binding.addNewBirthdayFab.context).inflate(R.layout.dialog_resend_verification, container, false)
+                builder.setView(dialogView)
+                val alertDialog = builder.create()
+                alertDialog.window!!.setBackgroundDrawableResource(android.R.color.transparent)
+                alertDialog.show()
+                val btnConfirmSubmit: MaterialButton = dialogView.findViewById(R.id.btn_resend_verification)
+                btnConfirmSubmit.setOnClickListener {
+                    alertDialog.dismiss()
+                    firebaseUtil.sendVerificationEmail()
+                    binding.addNewBirthdayFab.makeSimpleSnack("verification Email Sent!")
+                }
+            }
         }
 
         // Observables
@@ -187,6 +214,7 @@ class BirthdayListFragment : Fragment() {
 
         return binding.root
     }
+
 
     // Each time the view is created, the viewModel should re populate the recyclerView Data
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

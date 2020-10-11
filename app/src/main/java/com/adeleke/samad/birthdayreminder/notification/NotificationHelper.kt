@@ -153,8 +153,6 @@ class NotificationHelper private constructor(val context: Context) {
             PendingIntent.FLAG_UPDATE_CURRENT
         )
     }
-
-
     private fun createNotificationChannel() {
         mNotifyManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -171,6 +169,8 @@ class NotificationHelper private constructor(val context: Context) {
             mNotifyManager.createNotificationChannel(notificationChannel)
         }
     }
+
+
 
 
 //     Function to sent texts completely in the background. Not good practice!

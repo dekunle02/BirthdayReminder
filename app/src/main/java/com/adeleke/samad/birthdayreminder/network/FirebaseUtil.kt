@@ -98,6 +98,11 @@ class FirebaseUtil private constructor(context: Context) {
             }
     }
 
+    fun deleteUserInformation(userId: String) {
+        birthdayReference.child(userId).removeValue()
+        archiveReference.child(userId).removeValue()
+    }
+
 
     private fun addBirthdayToArchive(birthday: Birthday) {
         archiveReference.child(mAuth.currentUser!!.uid).child(birthday.id!!).setValue(birthday)

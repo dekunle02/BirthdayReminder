@@ -42,10 +42,10 @@ class SignUpViewModel(application: Application) : AndroidViewModel(application) 
                 _showProgressBar.value = false
                 if (task.isSuccessful) {
                     firebaseUtil.sendVerificationEmail()
+                    _snackMessage.value = context.getString(R.string.verification_link_sent)
                     _canNavigateToMain.value = true
                 } else {
                     _snackMessage.value = context.getString(R.string.error) + task.exception!!.message
-                    Log.d(TAG, "signIn is Failed! -> ${task.exception!!.message}")
                 }
             }
     }

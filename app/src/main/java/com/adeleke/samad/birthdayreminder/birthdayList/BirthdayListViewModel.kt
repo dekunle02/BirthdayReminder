@@ -5,16 +5,13 @@ import android.app.Application
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.adeleke.samad.birthdayreminder.model.Birthday
-import com.adeleke.samad.birthdayreminder.model.cancelAlarm
 import com.adeleke.samad.birthdayreminder.model.setAlarm
 import com.adeleke.samad.birthdayreminder.model.setMonthAlarm
 import com.adeleke.samad.birthdayreminder.network.FirebaseUtil
-import com.adeleke.samad.birthdayreminder.notification.NotificationHelper
 import com.adeleke.samad.birthdayreminder.notification.NotificationReceiver
 import com.adeleke.samad.birthdayreminder.util.monthSortMap
 import com.google.firebase.database.DataSnapshot
@@ -25,7 +22,8 @@ class BirthdayListViewModel(application: Application) : AndroidViewModel(applica
 
     private val context: Context = application.applicationContext
     private val firebaseUtil = FirebaseUtil.getInstance(context)
-    private val alarmManager: AlarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    private val alarmManager: AlarmManager =
+        context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
 
     // Observables
@@ -44,21 +42,20 @@ class BirthdayListViewModel(application: Application) : AndroidViewModel(applica
         query.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val myList = mutableListOf<Birthday>()
-                if (snapshot == null) {
-                    _recyclerData.value = myList
-                } else {
-                    for (singleSnapshot in snapshot.children) {
-                        val birthday = singleSnapshot.getValue(Birthday::class.java)!!
-                        myList.add(birthday)
-                    }
-                    _recyclerData.value = myList
-                    for (birthday in myList) {
-                        // Set Each individual birthday alarm when List is loaded or displayed
-                        birthday.setAlarm(context, alarmManager)
-                    }
-                    filterByMonth()
+
+                for (singleSnapshot in snapshot.children) {
+                    val birthday = singleSnapshot.getValue(Birthday::class.java)!!
+                    myList.add(birthday)
                 }
+                _recyclerData.value = myList
+                for (birthday in myList) {
+                    // Set Each individual birthday alarm when List is loaded or displayed
+                    birthday.setAlarm(context, alarmManager)
+                }
+                filterByMonth()
+
             }
+
             override fun onCancelled(error: DatabaseError) {
             }
         })
@@ -77,6 +74,7 @@ class BirthdayListViewModel(application: Application) : AndroidViewModel(applica
             _recyclerData.value!!.sortedWith(compareBy { monthSortMap[it.monthOfBirth] })
         _recyclerData.value = sortedList.toMutableList()
     }
+
     fun filterByAlphabetically() {
         val sortedList = _recyclerData.value!!.sortedWith(compareBy { it.name })
         _recyclerData.value = sortedList.toMutableList()
