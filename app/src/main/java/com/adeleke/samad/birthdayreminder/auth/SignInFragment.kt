@@ -61,14 +61,18 @@ class SignInFragment : Fragment() {
         binding.signInWithGoogleButton.setSize(SignInButton.SIZE_WIDE)
         binding.signInWithGoogleButton.setOnClickListener { _ ->
             binding.signInProgressBar.visibility = View.VISIBLE
+            binding.logoImageView.visibility = View.INVISIBLE
             googleSignIn()
         }
         binding.signInButton.setOnClickListener {
             if (inputFieldsAreCorrect()) {
+                binding.logoImageView.visibility = View.INVISIBLE
                 binding.signInProgressBar.visibility = View.VISIBLE
+                hideSoftKeyboard(it)
                 viewModel.signIn()
             }
         }
+
         binding.forgotPasswordButton.setOnClickListener {
             if (binding.signInEmailTI.text.toString().isEmailFormatted()) {
                 val alertDialogBuilder = AlertDialog.Builder(requireContext())
@@ -97,7 +101,7 @@ class SignInFragment : Fragment() {
         // Observables
         viewModel.showProgressBar.observe(viewLifecycleOwner, Observer { canShow ->
             binding.signInProgressBar.visibility = if (canShow!!) View.VISIBLE else View.GONE
-            binding.logoImageView.visibility = if (canShow!!) View.INVISIBLE else View.VISIBLE
+            binding.logoImageView.visibility = if (canShow) View.INVISIBLE else View.VISIBLE
         })
 
         viewModel.snackMessage.observe(viewLifecycleOwner, Observer { message ->
@@ -119,6 +123,8 @@ class SignInFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
+        binding.logoImageView.visibility = View.VISIBLE
+        binding.signInProgressBar.visibility = View.INVISIBLE
         if (requestCode == GOOGLE_RC_SIGN_IN) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
@@ -127,6 +133,7 @@ class SignInFragment : Fragment() {
                 Log.d(TAG, "firebaseAuthWithGoogle:" + account.id)
                 viewModel.firebaseAuthWithGoogle(account.idToken!!)
             } catch (e: ApiException) {
+                binding.signInWithGoogleButton.makeSimpleSnack("Google sign in failed. ${e.message}")
                 Log.d(TAG, "Google sign in failed + ${e.toString()}")
             }
         }

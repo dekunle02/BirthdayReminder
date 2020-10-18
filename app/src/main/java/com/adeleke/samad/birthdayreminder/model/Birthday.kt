@@ -25,6 +25,7 @@ data class Birthday(
     var notes: String? = "Buy gift\n",
     var notificationId: Int = generateRandomNumber()
 ) {
+
     companion object {
         private const val prefix = "birthday- "
         private fun generateID(): String {
@@ -36,6 +37,7 @@ data class Birthday(
             return random.nextInt(5000)
         }
     }
+
 }
 
 
@@ -60,6 +62,7 @@ fun Birthday.getNextBirthdayMillis(): Long {
     // Set the calendar time with the time from the birthday
     cal.set(Calendar.MONTH, monthSortMap[this.monthOfBirth]!! - 1)
     cal.set(Calendar.DAY_OF_MONTH, this.dayOfBirth!!.toInt())
+    cal.set(Calendar.AM_PM, 0)
     cal.set(Calendar.HOUR, 8)
     cal.set(Calendar.MINUTE, 0)
 
@@ -127,6 +130,7 @@ fun setMonthAlarm(context: Context, alarmManager: AlarmManager) {
     cal.set(Calendar.MILLISECOND, 0)
     // Set the calendar time with the time from the birthday
     cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) + 1)
+    cal.set(Calendar.AM_PM, 0)
     cal.set(Calendar.DAY_OF_MONTH, 1)
     cal.set(Calendar.HOUR, 8)
     cal.set(Calendar.MINUTE, 0)

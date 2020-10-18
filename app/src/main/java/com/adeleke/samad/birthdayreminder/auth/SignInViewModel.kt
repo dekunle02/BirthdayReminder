@@ -37,10 +37,8 @@ class SignInViewModel(application: Application): AndroidViewModel(application) {
 
     fun signIn() {
         _showProgressBar.value = true
-        Log.d(TAG, "signIn: called")
         firebaseUtil.mAuth.signInWithEmailAndPassword(email.value!!, password.value!!)
             .addOnCompleteListener { task ->
-                Log.d(TAG, "signInFirebase: called ")
                 _showProgressBar.value = false
                 if (task.isSuccessful) {
                     _canNavigateToMain.value = true
